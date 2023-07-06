@@ -1,0 +1,16 @@
+# Tell Spring where to get the data from
+spring:
+    datasource:
+        url: jdbc:postgresql://localhost:5432/project1
+        username: postgres
+        password: P0stgresPassw0rd
+    output:
+        ansi:
+            enabled: ALWAYS         # lets your terminal display colors
+
+
+# sets your logging level (default is info)
+logging:
+    level:
+        com:
+            skillstorm: debug       # sets the logging level for the entire project
