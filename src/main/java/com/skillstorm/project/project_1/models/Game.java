@@ -1,7 +1,5 @@
 package com.skillstorm.project.project_1.models;
 
-import java.util.Date;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -22,7 +20,7 @@ public class Game {
     private String title;
     
     @Column(name = "release_date")
-    private Date releaseDate;
+    private String releaseDate;
 
     @Column
     private String platform;
@@ -42,7 +40,7 @@ public class Game {
     public Game() {
     }
 
-    public Game(String title, Date releaseDate, String platform, String genre, String description, String publisher,
+    public Game(String title, String releaseDate, String platform, String genre, String description, String publisher,
             double price) {
         this.title = title;
         this.releaseDate = releaseDate;
@@ -53,7 +51,7 @@ public class Game {
         this.price = price;
     }
 
-    public Game(int id, String title, Date releaseDate, String platform, String genre, String description,
+    public Game(int id, String title, String releaseDate, String platform, String genre, String description,
             String publisher, double price) {
         this.id = id;
         this.title = title;
@@ -81,11 +79,11 @@ public class Game {
         this.title = title;
     }
 
-    public Date getReleaseDate() {
+    public String getReleaseDate() {
         return releaseDate;
     }
 
-    public void setReleaseDate(Date releaseDate) {
+    public void setReleaseDate(String releaseDate) {
         this.releaseDate = releaseDate;
     }
 

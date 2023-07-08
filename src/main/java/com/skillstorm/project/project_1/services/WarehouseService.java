@@ -49,7 +49,7 @@ public class WarehouseService {
     
 
     public Warehouse saveWarehouse (Warehouse warehouse) {
-        City newCity = cityService.savedCity(warehouse.getCity());
+        City newCity = cityService.saveCity(warehouse.getCity());
         warehouse.setCity(newCity);
         return warehouseRepository.save(warehouse);
     }
