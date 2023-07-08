@@ -11,7 +11,7 @@ public class CityService {
         @Autowired
         CityRepository repository;
 
-        public City savedCity(City city) {
+        public City saveCity(City city) {
             return repository.save(city);
         }
 
