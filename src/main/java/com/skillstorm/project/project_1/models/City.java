@@ -1,5 +1,5 @@
 package com.skillstorm.project.project_1.models;
 
-public class Warehouses {
+public class City {
     
 }

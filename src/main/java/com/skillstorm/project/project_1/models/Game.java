@@ -11,7 +11,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "games")
-public class Games {
+public class Game {
 
     @Id
     @Column
@@ -39,10 +39,10 @@ public class Games {
     @Column (name = "buy_price")
     private double price;
 
-    public Games() {
+    public Game() {
     }
 
-    public Games(String title, Date releaseDate, String platform, String genre, String description, String publisher,
+    public Game(String title, Date releaseDate, String platform, String genre, String description, String publisher,
             double price) {
         this.title = title;
         this.releaseDate = releaseDate;
@@ -53,7 +53,7 @@ public class Games {
         this.price = price;
     }
 
-    public Games(int id, String title, Date releaseDate, String platform, String genre, String description,
+    public Game(int id, String title, Date releaseDate, String platform, String genre, String description,
             String publisher, double price) {
         this.id = id;
         this.title = title;
@@ -154,7 +154,7 @@ public class Games {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        Games other = (Games) obj;
+        Game other = (Game) obj;
         if (id != other.id)
             return false;
         if (title == null) {
