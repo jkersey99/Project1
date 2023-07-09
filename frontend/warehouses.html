@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Game Warehouses</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+    <script src="warehouses.js" defer></script>
+
+</head>
+<body>
+    <div class="container-fluid">
+        <h1 class="h1">Warehouse API</h1>
+
+        <div class="row">
+            <div class="col-lg-6">
+
+                <form id="new-warehouse-form" action="#">
+
+                    <div class="form-group">
+                        <label>Warehouse Name</label>
+                        <input id="new-warehouse-name" name="new-warehouse-name" type="text" class="form-control"/>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Warehouse Manager</label>
+                        <input id="new-warehouse-manager" name="new-warehouse-manager" type="text" class="form-control"/>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Warehouse Maximum Inventory</label>
+                        <input id="new-warehouse-maxinv" name="new-warehouse-maxinv" type="text" class="form-control"/>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Warehouse City</label>
+                        <input id="new-warehouse-city" name="new-warehouse-city" type="text" class="form-control"/>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Warehouse State</label>
+                        <input id="new-warehouse-state" name="new-warehouse-state" type="text" class="form-control"/>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Warehouse Zip</label>
+                        <input id="new-warehouse-zip" name="new-warehouse-zip" type="text" class="form-control"/>
+                    </div>
+
+                    <div class="form-group">
+                        <input id="save-button" name="save-button" type="submit" value="Save" class="btn btn-primary" />
+                    </div>
+
+                </form>
+
+                <form id="update-warehouse-form" action="#" style="display:none;">
+
+                    <div class="form-group">
+                        <label>Warehouse ID</label>
+                        <input id="update-warehouse-id" name="update-warehouse-id" type="text" class="form-control" disabled/>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Warehouse Name</label>
+                        <input id="update-warehouse-name" name="update-warehouse-name" type="text" class="form-control"/>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Warehouse Manager</label>
+                        <input id="update-warehouse-manager" name="update-warehouse-manager" type="text" class="form-control"/>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Warehouse Maximum Inventory</label>
+                        <input id="update-warehouse-maxinv" name="update-warehouse-maxinv" type="text" class="form-control"/>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Warehouse City</label>
+                        <input id="update-warehouse-city" name="update-warehouse-city" type="text" class="form-control"/>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Warehouse State</label>
+                        <input id="update-warehouse-state" name="update-warehouse-state" type="text" class="form-control"/>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Warehouse Zip</label>
+                        <input id="update-warehouse-zip" name="update-warehouse-zip" type="text" class="form-control"/>
+                    </div>
+
+                    <div class="form-group">
+                        <input id="update-button" name="update-button" type="submit" value="Update" class="btn btn-primary" />
+                        <input id="update-cancel-button" name="update-cancel-button" type="submit" value="Cancel" class="btn btn-secondary" />
+                    </div>
+                </form>
+
+                <form id="delete-warehouse-form" action="#" style="display:none;">
+
+                    <div class="form-group">
+                        <label>Warehouse ID</label>
+                        <input id="delete-warehouse-id" name="delete-warehouse-id" type="text" class="form-control" disabled/>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Warehouse Name</label>
+                        <input id="delete-warehouse-name" name="delete-warehouse-name" type="text" class="form-control" disabled/>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Warehouse Manager</label>
+                        <input id="delete-warehouse-manager" name="delete-warehouse-manager" type="text" class="form-control" disabled/>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Warehouse Maximum Inventory</label>
+                        <input id="delete-warehouse-maxinv" name="delete-warehouse-maxinv" type="text" class="form-control" disabled/>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Warehouse City</label>
+                        <input id="delete-warehouse-city" name="delete-warehouse-city" type="text" class="form-control" disabled/>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Warehouse State</label>
+                        <input id="delete-warehouse-state" name="delete-warehouse-state" type="text" class="form-control" disabled/>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Warehouse Zip</label>
+                        <input id="delete-warehouse-zip" name="delete-warehouse-zip" type="text" class="form-control" disabled/>
+                    </div>
+
+                    <div class="form-group">
+                        <input id="delete-button" name="delete-button" type="submit" value="Delete" class="btn btn-primary" />
+                        <input id="delete-cancel-button" name="delete-cancel-button" type="submit" value="Cancel" class="btn btn-secondary" />
+                    </div>
+                </form>
+            </div>
+
+            <div class="col-lg-6">
+
+                <table class="table table-primary-hover">
+
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Warehouse Name</th>
+                            <th>Manager</th>
+                            <th>Maximum Inventory</th>
+                            <th>Location</th>
+                            <th>Edit</th>
+                            <th>Delete</th>
+                        </tr>
+                    </thead>
+                    <tbody id="warehouse-table-body">
+
+
+
+                    </tbody>
+
+
+                </table>
+
+            </div>
+
+        </div>
+
+
+
+
+    </div>
+    
+</body>
+</html>

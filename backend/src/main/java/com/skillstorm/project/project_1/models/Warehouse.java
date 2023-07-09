@@ -14,10 +14,17 @@ import javax.validation.constraints.Min;
 @Entity
 @Table(name="warehouses")
 public class Warehouse {
+
     @Id
-    @Column
+    @Column(name="ware_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+
+    @Column(name="ware_name")
+    private String name;
+
+    @Column
+    private String manager;
 
     @Column(name="max_inv")
     @Max(3000)
@@ -31,8 +38,17 @@ public class Warehouse {
     public Warehouse() {
     }
 
-    public Warehouse(int id, @Max(3000) @Min(1) int maxInv, City city) {
+    public Warehouse(int id, String name, String manager, @Max(3000) @Min(1) int maxInv, City city) {
         this.id = id;
+        this.name = name;
+        this.manager = manager;
+        this.maxInv = maxInv;
+        this.city = city;
+    }
+
+    public Warehouse(String name, String manager, @Max(3000) @Min(1) int maxInv, City city) {
+        this.name = name;
+        this.manager = manager;
         this.maxInv = maxInv;
         this.city = city;
     }
@@ -43,6 +59,22 @@ public class Warehouse {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getManager() {
+        return manager;
+    }
+
+    public void setManager(String manager) {
+        this.manager = manager;
     }
 
     public int getMaxInv() {
@@ -66,6 +98,8 @@ public class Warehouse {
         final int prime = 31;
         int result = 1;
         result = prime * result + id;
+        result = prime * result + ((name == null) ? 0 : name.hashCode());
+        result = prime * result + ((manager == null) ? 0 : manager.hashCode());
         result = prime * result + maxInv;
         result = prime * result + ((city == null) ? 0 : city.hashCode());
         return result;
@@ -82,6 +116,16 @@ public class Warehouse {
         Warehouse other = (Warehouse) obj;
         if (id != other.id)
             return false;
+        if (name == null) {
+            if (other.name != null)
+                return false;
+        } else if (!name.equals(other.name))
+            return false;
+        if (manager == null) {
+            if (other.manager != null)
+                return false;
+        } else if (!manager.equals(other.manager))
+            return false;
         if (maxInv != other.maxInv)
             return false;
         if (city == null) {
@@ -94,7 +138,8 @@ public class Warehouse {
 
     @Override
     public String toString() {
-        return "Warehouse [id=" + id + ", max_inv=" + maxInv + ", city=" + city + "]";
+        return "Warehouse [id=" + id + ", name=" + name + ", manager=" + manager + ", maxInv=" + maxInv + ", city="
+                + city + "]";
     }
 
 }

@@ -58,9 +58,9 @@ public class WarehouseService {
         return warehouseRepository.updateWarehouseMaxInv(warehouse.getId(), newMax);
     }
 
-    public void deleteWarehouse(int id) {
+    public void deleteWarehouse(Warehouse warehouse) {
 
-        warehouseRepository.delete(findWarehouseById(id));
+        warehouseRepository.delete(warehouse);
     }
     
 }
