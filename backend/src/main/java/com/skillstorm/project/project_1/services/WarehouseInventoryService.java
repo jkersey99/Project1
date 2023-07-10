@@ -31,6 +31,14 @@ public class WarehouseInventoryService {
         }
         return null;
     }
+
+    public WarehouseInventory saveInventory(WarehouseInventory inventory) {
+        return warehouseInvetoryRepository.save(inventory);
+    }
+
+    public void deleteInventory(WarehouseInventory inventory) {
+        warehouseInvetoryRepository.delete(inventory);
+    }
     
     
 }
