@@ -11,9 +11,9 @@ import com.skillstorm.project.project_1.models.WarehouseInventory;
 @Repository
 public interface WarehouseInventoryRepository extends JpaRepository<Game, Integer> {
 
-    public List<WarehouseInventory>findAllByWareId (int wareId);
+    public List<WarehouseInventory>findAllByWareId (int ware_id);
 
-    public List<WarehouseInventory>findAllByGameId (int gameId);
+    public List<WarehouseInventory>findAllByGameId (int game_id);
 
     
 }

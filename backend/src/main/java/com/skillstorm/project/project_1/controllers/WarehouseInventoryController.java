@@ -22,9 +22,15 @@ public class WarehouseInventoryController {
     @Autowired
     WarehouseInventoryService warehouseInventoryService;
 
-    @GetMapping
+    @GetMapping("/warehouse")
     public ResponseEntity<List<WarehouseInventory>> findWarehouseInventory(@RequestParam("wareId") int wareId) {
         List<WarehouseInventory> inventory = warehouseInventoryService.findAllByWareId(wareId);
+        return new ResponseEntity<List<WarehouseInventory>>(inventory, HttpStatus.OK);
+    }
+
+    @GetMapping("/game")
+    public ResponseEntity<List<WarehouseInventory>> findGameInventory(@RequestParam("gameId") int gameId) {
+        List<WarehouseInventory> inventory = warehouseInventoryService.findAllByGameId(gameId);
         return new ResponseEntity<List<WarehouseInventory>>(inventory, HttpStatus.OK);
     }
     

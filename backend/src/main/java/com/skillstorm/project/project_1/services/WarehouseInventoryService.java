@@ -22,5 +22,15 @@ public class WarehouseInventoryService {
         }
         return null;
     }
+        
+        public List<WarehouseInventory> findAllByGameId(int gameId) {
+        List<WarehouseInventory> inventory = warehouseInvetoryRepository.findAllByGameId(gameId);
+
+        if(!inventory.isEmpty()) {
+            return inventory;
+        }
+        return null;
+    }
+    
     
 }
