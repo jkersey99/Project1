@@ -61,6 +61,7 @@ public class WarehouseService {
     public void deleteWarehouse(Warehouse warehouse) {
 
         warehouseRepository.delete(warehouse);
+        warehouseRepository.resetWarehouseSerial();
     }
     
 }
