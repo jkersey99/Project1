@@ -2,12 +2,18 @@ package com.skillstorm.project.project_1.controllers;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -34,9 +40,29 @@ public class WarehouseController {
         Warehouse warehouse = warehouseService.findWarehouseById(id);
         return new ResponseEntity<Warehouse>(warehouse, HttpStatus.OK);
     }
+
     @GetMapping("/city")
     public ResponseEntity<List<Warehouse>> findWarehousesByCity(@RequestParam("city") String city) {
         List<Warehouse> warehouses = warehouseService.findWarehousesByCity(city);
         return new ResponseEntity<List<Warehouse>>(warehouses, HttpStatus.OK);
+    }
+
+    @PostMapping
+    public ResponseEntity<Warehouse> createWarehouse(@Valid @RequestBody Warehouse warehouse) {
+        Warehouse newWarehouse = warehouseService.saveWarehouse(warehouse);
+        return new ResponseEntity<Warehouse>(newWarehouse, HttpStatus.CREATED);
+    }
+
+    @PutMapping
+    public ResponseEntity<Warehouse> updateWarehouse(@RequestBody Warehouse warehouse) {
+        Warehouse newWarehouse = warehouseService.saveWarehouse(warehouse);
+        return new ResponseEntity<Warehouse>(newWarehouse, HttpStatus.OK);
+
+    }
+
+    @DeleteMapping
+    public ResponseEntity<Warehouse> deleteWarehouse(@RequestParam("id") int id) {
+        warehouseService.deleteWarehouse(id);
+        return ResponseEntity.noContent().build();
     }
 }

@@ -48,14 +48,19 @@ public class WarehouseService {
 
     
 
-    public Warehouse saveWarehouse (Warehouse warehouse) {
-        City newCity = cityService.saveCity(warehouse.getCity());
-        warehouse.setCity(newCity);
+    public Warehouse saveWarehouse(Warehouse warehouse) {
+        City city = cityService.saveCity(warehouse.getCity());
+        warehouse.setCity(city);
         return warehouseRepository.save(warehouse);
     }
 
     public int updateMaxInv (Warehouse warehouse, int newMax) {
         return warehouseRepository.updateWarehouseMaxInv(warehouse.getId(), newMax);
+    }
+
+    public void deleteWarehouse(int id) {
+
+        warehouseRepository.delete(findWarehouseById(id));
     }
     
 }
