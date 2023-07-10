@@ -1,12 +1,18 @@
 package com.skillstorm.project.project_1.models;
 
+<<<<<<< Updated upstream:src/main/java/com/skillstorm/project/project_1/models/Game.java
 import java.util.Date;
+=======
+import java.util.List;
+>>>>>>> Stashed changes:backend/src/main/java/com/skillstorm/project/project_1/models/Game.java
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -38,6 +44,9 @@ public class Game {
 
     @Column (name = "buy_price")
     private double price;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "game")
+    private List<WarehouseInventory> inventory;
 
     public Game() {
     }
@@ -143,6 +152,7 @@ public class Game {
         long temp;
         temp = Double.doubleToLongBits(price);
         result = prime * result + (int) (temp ^ (temp >>> 32));
+        result = prime * result + ((inventory == null) ? 0 : inventory.hashCode());
         return result;
     }
 
@@ -189,14 +199,27 @@ public class Game {
             return false;
         if (Double.doubleToLongBits(price) != Double.doubleToLongBits(other.price))
             return false;
+        if (inventory == null) {
+            if (other.inventory != null)
+                return false;
+        } else if (!inventory.equals(other.inventory))
+            return false;
         return true;
     }
 
     @Override
     public String toString() {
-        return "Games [id=" + id + ", title=" + title + ", releaseDate=" + releaseDate + ", platform=" + platform
+        return "Game [id=" + id + ", title=" + title + ", releaseDate=" + releaseDate + ", platform=" + platform
                 + ", genre=" + genre + ", description=" + description + ", publisher=" + publisher + ", price=" + price
-                + "]";
+                + ", inventory=" + inventory + "]";
+    }
+
+    public List<WarehouseInventory> getInventory() {
+        return inventory;
+    }
+
+    public void setInventory(List<WarehouseInventory> inventory) {
+        this.inventory = inventory;
     }
 
     
