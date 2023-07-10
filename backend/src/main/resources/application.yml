@@ -7,6 +7,9 @@ spring:
     output:
         ansi:
             enabled: ALWAYS         # lets your terminal display colors
+    jackson:
+        serialization:
+            fail-on-empty-beans: false
 
 
 # sets your logging level (default is info)

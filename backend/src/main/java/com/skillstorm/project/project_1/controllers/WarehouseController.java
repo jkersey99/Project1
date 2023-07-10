@@ -47,13 +47,15 @@ public class WarehouseController {
         return new ResponseEntity<List<Warehouse>>(warehouses, HttpStatus.OK);
     }
 
+    
+
     @PostMapping
     public ResponseEntity<Warehouse> createWarehouse(@Valid @RequestBody Warehouse warehouse) {
         Warehouse newWarehouse = warehouseService.saveWarehouse(warehouse);
         return new ResponseEntity<Warehouse>(newWarehouse, HttpStatus.CREATED);
     }
 
-    @PutMapping
+    @PutMapping("/warehouse")
     public ResponseEntity<Warehouse> updateWarehouse(@RequestBody Warehouse warehouse) {
         Warehouse newWarehouse = warehouseService.saveWarehouse(warehouse);
         return new ResponseEntity<Warehouse>(newWarehouse, HttpStatus.OK);
@@ -61,8 +63,8 @@ public class WarehouseController {
     }
 
     @DeleteMapping
-    public ResponseEntity<Warehouse> deleteWarehouse(@RequestParam("id") int id) {
-        warehouseService.deleteWarehouse(id);
+    public ResponseEntity<Warehouse> deleteWarehouse(@RequestBody Warehouse warehouse) {
+        warehouseService.deleteWarehouse(warehouse);
         return ResponseEntity.noContent().build();
     }
 }
