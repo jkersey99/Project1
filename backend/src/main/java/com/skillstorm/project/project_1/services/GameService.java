@@ -43,6 +43,7 @@ public class GameService {
     
     public void deleteGame(Game game) {
         gameRepository.delete(game);
+        gameRepository.resetGameSerial();
     }
    
 }

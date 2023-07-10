@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Games</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+    <script src="games.js" defer></script>
+
+</head>
+<body>
+    <div class="container-fluid">
+        <h1 class="h1">Game API</h1>
+
+        <div class="row">
+            <div class="col-lg-6">
+
+                <form id="new-game-form" action="#">
+
+                    <div class="form-group">
+                        <label>Game Title</label>
+                        <input id="new-game-title" name="new-game-title" type="text" class="form-control"/>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Platform</label>
+                        <input id="new-game-platform" name="new-game-platform" type="text" class="form-control"/>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Publisher</label>
+                        <input id="new-game-publisher" name="new-game-publisher" type="text" class="form-control"/>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Release Date</label>
+                        <input id="new-game-releaseDate" name="new-game-releaseDate" type="text" class="form-control"/>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Genre</label>
+                        <input id="new-game-genre" name="new-game-genre" type="text" class="form-control"/>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Description</label>
+                        <input id="new-game-description" name="new-game-description" type="text" class="form-control"/>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Price</label>
+                        <input id="new-game-price" name="new-game-price" type="text" class="form-control"/>
+                    </div>
+
+                    <div class="form-group">
+                        <input id="save-button" name="save-button" type="submit" value="Save" class="btn btn-primary" />
+                    </div>
+
+                </form>
+
+                <form id="update-game-form" action="#" style="display:none;">
+
+                    <div class="form-group">
+                        <label>Game ID</label>
+                        <input id="update-game-id" name="update-game-id" type="text" class="form-control"/>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Game Title</label>
+                        <input id="update-game-title" name="update-game-title" type="text" class="form-control"/>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Platform</label>
+                        <input id="update-game-platform" name="update-game-platform" type="text" class="form-control"/>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Publisher</label>
+                        <input id="update-game-publisher" name="update-game-publisher" type="text" class="form-control"/>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Release Date</label>
+                        <input id="update-game-releaseDate" name="update-game-releaseDate" type="text" class="form-control"/>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Genre</label>
+                        <input id="update-game-genre" name="update-game-genre" type="text" class="form-control"/>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Description</label>
+                        <input id="update-game-description" name="update-game-description" type="text" class="form-control"/>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Price</label>
+                        <input id="update-game-price" name="update-game-price" type="text" class="form-control"/>
+                    </div>
+
+                    <div class="form-group">
+                        <input id="update-button" name="update-button" type="submit" value="Update" class="btn btn-primary" />
+                        <input id="update-cancel-button" name="update-cancel-button" type="submit" value="Cancel" class="btn btn-secondary" />
+                    </div>
+                </form>
+
+                <form id="delete-game-form" action="#" style="display:none;">
+
+                    <div class="form-group">
+                        <label>Game ID</label>
+                        <input id="delete-game-id" name="delete-game-id" type="text" class="form-control"/>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Game Title</label>
+                        <input id="delete-game-title" name="delete-game-title" type="text" class="form-control"/>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Platform</label>
+                        <input id="delete-game-platform" name="delete-game-platform" type="text" class="form-control"/>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Publisher</label>
+                        <input id="delete-game-publisher" name="delete-game-publisher" type="text" class="form-control"/>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Release Date</label>
+                        <input id="delete-game-releaseDate" name="delete-game-releaseDate" type="text" class="form-control"/>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Genre</label>
+                        <input id="delete-game-genre" name="delete-game-genre" type="text" class="form-control"/>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Description</label>
+                        <input id="delete-game-description" name="delete-game-description" type="text" class="form-control"/>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Price</label>
+                        <input id="delete-game-price" name="delete-game-price" type="text" class="form-control"/>
+                    </div>
+
+                    <div class="form-group">
+                        <input id="delete-button" name="delete-button" type="submit" value="Delete" class="btn btn-primary" />
+                        <input id="delete-cancel-button" name="delete-cancel-button" type="submit" value="Cancel" class="btn btn-secondary" />
+                    </div>
+                </form>
+            </div>
+
+            <div class="col-lg-6">
+
+                <table class="table table-primary-hover">
+
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Game</th>
+                            <th>Platform</th>
+                            <th>Publisher</th>
+                            <th>Release Date</th>
+                            <th>Genre</th>
+                            <th>Description</th>
+                            <th>Price</th>
+                            <th>Edit</th>
+                            <th>Delete</th>
+                        </tr>
+                    </thead>
+                    <tbody id="game-table-body">
+
+
+
+                    </tbody>
+
+
+                </table>
+
+            </div>
+
+        </div>
+
+
+
+
+    </div>
+    
+</body>
+</html>
