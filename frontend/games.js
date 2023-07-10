@@ -177,6 +177,7 @@ document.getElementById('update-game-form').addEventListener('submit', (event) =
 
     event.preventDefault();
 
+
     let inputData = new FormData(document.getElementById('update-game-form'));
 
     let game = {
@@ -282,3 +283,85 @@ function removeGameFromTable(game) {
     const element = document.getElementById('TR' + game.id);
     element.remove();
 };
+
+
+/**
+document.getElementById('giantbomb-button').addEventListener('click', (event) => {
+
+    event.preventDefault();
+
+    console.log("test");
+
+    let inputData = new FormData(document.getElementById('update-game-form'));
+
+    let gameTitle = inputData.get('update-game-title');
+
+    giantData = giantBombAPI(gameTitle);
+
+    console.log(giantData);
+
+    let game = {
+            id : document.getElementById('update-game-id').value,
+            title : inputData.get('update-game-title'),
+            platform : inputData.get('update-game-platform'),
+            publisher : giantData.results.publishers.name,
+            releaseDate: giantData.results.original_release_date,
+            genre : giantData.results.genres.name,
+            description : giantData.results.description,
+            price : inputData.get('update-game-price')
+            
+        };
+
+    console.log(game);
+
+    fetch(URL + '/game', {
+        method : 'PUT',
+        headers : {
+            "Content-Type" : "application/json",
+        },
+        body : JSON.stringify(game)
+    })
+
+    .then((data) => {
+        return data.json();
+    })
+
+    .then((gameJson) => {
+        updateGameInTable(gameJson);
+
+        document.getElementById('update-game-form').reset();
+        document.getElementById('new-game-form').style.display = 'block';
+        document.getElementById('update-game-form').style.display = 'none';
+        document.getElementById('delete-game-form').style.display = 'none';
+    })
+
+    .catch((error) => {
+        console.error(error);
+    })
+
+});
+*/
+//document.getElementById('giantbomb-button').addEventListener('click', (event) => {
+
+   // event.preventDefault();
+
+
+//$("giantbomb-button").click ( function (e) {
+  //  e.preventDefault();
+    //let URL = `https://www.giantbomb.com/api/search/?api_key=da0a26a3994cb8bd2bc52f6fe82255ae874430bd&format=jsonp&json_callback=<your callback name>&query=${gameTitle}&resources=game`;
+
+   // var request = new XMLHttpRequest();
+  //  request.open('GET', URL, true);
+  //  request.onload = function() {
+    //    var data=JSON.parse(this.response);
+ //       if (request.status >= 200 && request.status < 400) {
+      //      console.log("Successful!");
+      //      return data;
+
+       //     }
+ //   }   
+    
+    //request.send();
+   // console.log("step1");
+   
+
