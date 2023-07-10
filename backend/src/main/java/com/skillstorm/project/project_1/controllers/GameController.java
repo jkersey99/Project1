@@ -55,7 +55,7 @@ public class GameController {
         return new ResponseEntity<Game>(createdGame, HttpStatus.CREATED);
     }
 
-    @PutMapping
+    @PutMapping("/game")
     public ResponseEntity<Game> updateGame(@RequestBody Game game) {
         Game updatedGame = gameService.saveGame(game);
         return new ResponseEntity<Game>(updatedGame, HttpStatus.OK);
