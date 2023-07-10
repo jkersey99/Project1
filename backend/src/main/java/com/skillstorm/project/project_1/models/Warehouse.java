@@ -15,6 +15,8 @@ import javax.persistence.Table;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 @Entity
 @Table(name="warehouses")
 public class Warehouse {
@@ -39,7 +41,8 @@ public class Warehouse {
     @JoinColumn(name="city")
     private City city;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "warehouse")
+    @JsonBackReference
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "warehouse")
     private List<WarehouseInventory> inventory;
 
     public Warehouse() {

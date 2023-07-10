@@ -11,6 +11,8 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 @Entity
 @Table(name = "games")
 public class Game {
@@ -41,7 +43,8 @@ public class Game {
     @Column (name = "buy_price")
     private double price;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "game")
+    @JsonBackReference
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "game")
     private List<WarehouseInventory> inventory;
 
     public Game() {

@@ -6,26 +6,35 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.IdClass;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 @Entity
 @Table(name="ware_inv")
+@IdClass(CompositeId.class)
 public class WarehouseInventory implements Serializable{
     
     @Id
+    @JsonManagedReference
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="ware_id")
     private Warehouse warehouse;
 
     @Id
+    @JsonManagedReference
     @ManyToOne
     @JoinColumn(name="game_id")
     private Game game;
 
     @Column
     private int quantity;
+    
+    public WarehouseInventory() {
+    }
 
     public WarehouseInventory(Warehouse warehouse, Game game, int quantity) {
         this.warehouse = warehouse;
