@@ -1,6 +1,5 @@
 package com.skillstorm.project.project_1.models;
 
-import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,21 +10,18 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(name="ware_inv")
 @IdClass(CompositeId.class)
-public class WarehouseInventory implements Serializable{
+public class WarehouseInventory{
     
     @Id
-    @JsonManagedReference
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="ware_id")
     private Warehouse warehouse;
 
     @Id
-    @JsonManagedReference
     @ManyToOne
     @JoinColumn(name="game_id")
     private Game game;

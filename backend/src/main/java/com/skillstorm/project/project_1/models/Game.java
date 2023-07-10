@@ -43,6 +43,9 @@ public class Game {
     @Column (name = "buy_price")
     private double price;
 
+    @Column
+    private String image;
+
     @JsonBackReference
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "game")
     private List<WarehouseInventory> inventory;
@@ -50,8 +53,9 @@ public class Game {
     public Game() {
     }
 
+    // constructor without an id
     public Game(String title, String releaseDate, String platform, String genre, String description, String publisher,
-            double price) {
+            double price, String image) {
         this.title = title;
         this.releaseDate = releaseDate;
         this.platform = platform;
@@ -59,10 +63,12 @@ public class Game {
         this.description = description;
         this.publisher = publisher;
         this.price = price;
+        this.image = image;
     }
 
+    // full constructor
     public Game(int id, String title, String releaseDate, String platform, String genre, String description,
-            String publisher, double price) {
+            String publisher, double price, String image) {
         this.id = id;
         this.title = title;
         this.releaseDate = releaseDate;
@@ -71,7 +77,10 @@ public class Game {
         this.description = description;
         this.publisher = publisher;
         this.price = price;
+        this.image = image;
     }
+
+    //Getters, Setters, hashCode, equals, toString
 
     public int getId() {
         return id;
@@ -137,6 +146,22 @@ public class Game {
         this.price = price;
     }
 
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    public List<WarehouseInventory> getInventory() {
+        return inventory;
+    }
+
+    public void setInventory(List<WarehouseInventory> inventory) {
+        this.inventory = inventory;
+    }
+
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -151,6 +176,7 @@ public class Game {
         long temp;
         temp = Double.doubleToLongBits(price);
         result = prime * result + (int) (temp ^ (temp >>> 32));
+        result = prime * result + ((image == null) ? 0 : image.hashCode());
         result = prime * result + ((inventory == null) ? 0 : inventory.hashCode());
         return result;
     }
@@ -198,6 +224,11 @@ public class Game {
             return false;
         if (Double.doubleToLongBits(price) != Double.doubleToLongBits(other.price))
             return false;
+        if (image == null) {
+            if (other.image != null)
+                return false;
+        } else if (!image.equals(other.image))
+            return false;
         if (inventory == null) {
             if (other.inventory != null)
                 return false;
@@ -210,16 +241,6 @@ public class Game {
     public String toString() {
         return "Game [id=" + id + ", title=" + title + ", releaseDate=" + releaseDate + ", platform=" + platform
                 + ", genre=" + genre + ", description=" + description + ", publisher=" + publisher + ", price=" + price
-                + ", inventory=" + inventory + "]";
+                + ", image=" + image + ", inventory=" + inventory + "]";
     }
-
-    public List<WarehouseInventory> getInventory() {
-        return inventory;
-    }
-
-    public void setInventory(List<WarehouseInventory> inventory) {
-        this.inventory = inventory;
-    }
-
-    
 }
