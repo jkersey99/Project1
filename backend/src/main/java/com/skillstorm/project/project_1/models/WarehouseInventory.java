@@ -1,6 +1,5 @@
 package com.skillstorm.project.project_1.models;
 
-import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -15,7 +14,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name="ware_inv")
 @IdClass(CompositeId.class)
-public class WarehouseInventory implements Serializable{
+public class WarehouseInventory{
     
     @Id
     @ManyToOne(fetch = FetchType.LAZY)

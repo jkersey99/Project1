@@ -177,6 +177,7 @@ document.getElementById('update-game-form').addEventListener('submit', (event) =
 
     event.preventDefault();
 
+
     let inputData = new FormData(document.getElementById('update-game-form'));
 
     let game = {
@@ -282,3 +283,173 @@ function removeGameFromTable(game) {
     const element = document.getElementById('TR' + game.id);
     element.remove();
 };
+
+
+$(document).ready(function(){
+    $("#giantbomb-button").click(function(event) {
+        event.preventDefault();
+    
+        var gameTitle = document.getElementById('update-game-title').value
+        var api = '?format=jsonp&api_key=da0a26a3994cb8bd2bc52f6fe82255ae874430bd';
+        var gameURL
+
+        $.ajax ({
+            type: 'GET',
+            dataType: 'jsonp',
+            crossDomain: true,
+            jsonp: 'json_callback',
+            url: `http://www.giantbomb.com/api/search/` + api + `&query=${gameTitle}&resources=game`,
+            complete: function() {
+                console.log('done');
+            },
+            success: function(giantData) {
+                console.log(giantData);
+                gameURL = giantData.results[0].api_detail_url + api;
+                $.ajax ({
+                    type: 'GET',
+                    dataType: 'jsonp',
+                    crossDomain: true,
+                    jsonp: 'json_callback',
+                    url: gameURL,
+                    complete: function() {
+                        console.log('done2');
+                    },
+                    success: function(giantData2) {
+                        console.log(giantData2);
+        
+        
+        
+                        
+                        let inputData = new FormData(document.getElementById('update-game-form'));
+        
+                        let game = {
+                            id : document.getElementById('update-game-id').value,
+                            title : gameTitle,
+                            platform : giantData2.results.platforms[0].name,
+                            publisher : giantData2.results.publishers[0].name,
+                            releaseDate: giantData2.results.original_release_date,
+                            genre : giantData2.results.genres[0].name,
+                            description : giantData2.results.deck,
+                            price : inputData.get('update-game-price'),
+                            image : giantData2.results.image.thumb_url
+                            
+                        }
+
+
+                        fetch(URL + '/game', {
+                            method : 'PUT',
+                            headers : {
+                                "Content-Type" : "application/json",
+                            },
+                            body : JSON.stringify(game)
+                        })
+                    
+                        .then((data) => {
+                            return data.json();
+                        })
+                    
+                        .then((gameJson) => {
+                            updateGameInTable(gameJson);
+                    
+                            document.getElementById('update-game-form').reset();
+                            document.getElementById('new-game-form').style.display = 'block';
+                            document.getElementById('update-game-form').style.display = 'none';
+                            document.getElementById('delete-game-form').style.display = 'none';
+                        })
+                    
+                        .catch((error) => {
+                            console.error(error);
+                        })
+                    }
+                    
+                })
+            
+            }
+        })   
+
+            
+        })
+      
+
+});
+
+/**
+document.getElementById('giantbomb-button').addEventListener('click', (event) => {
+
+    event.preventDefault();
+
+    console.log("test");
+
+    let inputData = new FormData(document.getElementById('update-game-form'));
+
+    let gameTitle = inputData.get('update-game-title');
+
+    giantData = giantBombAPI(gameTitle);
+
+    console.log(giantData);
+
+    let game = {
+            id : document.getElementById('update-game-id').value,
+            title : inputData.get('update-game-title'),
+            platform : inputData.get('update-game-platform'),
+            publisher : giantData.results.publishers.name,
+            releaseDate: giantData.results.original_release_date,
+            genre : giantData.results.genres.name,
+            description : giantData.results.description,
+            price : inputData.get('update-game-price')
+            
+        };
+
+    console.log(game);
+
+    fetch(URL + '/game', {
+        method : 'PUT',
+        headers : {
+            "Content-Type" : "application/json",
+        },
+        body : JSON.stringify(game)
+    })
+
+    .then((data) => {
+        return data.json();
+    })
+
+    .then((gameJson) => {
+        updateGameInTable(gameJson);
+
+        document.getElementById('update-game-form').reset();
+        document.getElementById('new-game-form').style.display = 'block';
+        document.getElementById('update-game-form').style.display = 'none';
+        document.getElementById('delete-game-form').style.display = 'none';
+    })
+
+    .catch((error) => {
+        console.error(error);
+    })
+
+});
+*/
+//document.getElementById('giantbomb-button').addEventListener('click', (event) => {
+
+   // event.preventDefault();
+
+
+//$("giantbomb-button").click ( function (e) {
+  //  e.preventDefault();
+    //let URL = `https://www.giantbomb.com/api/search/?api_key=da0a26a3994cb8bd2bc52f6fe82255ae874430bd&format=jsonp&json_callback=<your callback name>&query=${gameTitle}&resources=game`;
+
+   // var request = new XMLHttpRequest();
+  //  request.open('GET', URL, true);
+  //  request.onload = function() {
+    //    var data=JSON.parse(this.response);
+ //       if (request.status >= 200 && request.status < 400) {
+      //      console.log("Successful!");
+      //      return data;
+
+       //     }
+ //   }   
+    
+    //request.send();
+   // console.log("step1");
+   
+
