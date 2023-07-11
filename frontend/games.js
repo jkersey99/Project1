@@ -144,6 +144,7 @@ function activateEditForm(gameId) {
             document.getElementById('update-game-genre').value = g.genre;
             document.getElementById('update-game-description').value = g.description;
             document.getElementById('update-game-price').value = g.price;
+            document.getElementById('update-game-picture').src = g.image;
         }
     }
 
@@ -331,7 +332,7 @@ $(document).ready(function(){
                             genre : giantData2.results.genres[0].name,
                             description : giantData2.results.deck,
                             price : inputData.get('update-game-price'),
-                            image : giantData2.results.image.thumb_url
+                            image : giantData2.results.image.small_url
                             
                         }
 
