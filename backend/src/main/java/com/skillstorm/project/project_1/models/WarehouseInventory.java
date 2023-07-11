@@ -11,7 +11,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(name="ware_inv")
@@ -19,13 +18,11 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 public class WarehouseInventory implements Serializable{
     
     @Id
-    @JsonManagedReference
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="ware_id")
     private Warehouse warehouse;
 
     @Id
-    @JsonManagedReference
     @ManyToOne
     @JoinColumn(name="game_id")
     private Game game;
