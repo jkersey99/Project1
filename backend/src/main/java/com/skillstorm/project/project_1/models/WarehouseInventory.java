@@ -22,7 +22,7 @@ public class WarehouseInventory{
     private Warehouse warehouse;
 
     @Id
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="game_id")
     private Game game;
 

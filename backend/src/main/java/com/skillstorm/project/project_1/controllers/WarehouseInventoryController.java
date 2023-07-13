@@ -48,9 +48,9 @@ public class WarehouseInventoryController {
     }
 
     @PutMapping
-    public ResponseEntity<WarehouseInventory> updateInventory(@RequestBody WarehouseInventory inventory) {
-        WarehouseInventory updateInventory = warehouseInventoryService.saveInventory(inventory);
-        return new ResponseEntity<WarehouseInventory>(updateInventory, HttpStatus.OK);
+    public ResponseEntity<Integer> updateInventory(@RequestParam("wareId") int wareId, @RequestParam("gameId") int gameId, @RequestParam("quantity") int quantity) {
+        int updateInventory = warehouseInventoryService.updateInventory(wareId, gameId, quantity);
+        return new ResponseEntity<Integer>(updateInventory, HttpStatus.OK);
     }
 
     @DeleteMapping

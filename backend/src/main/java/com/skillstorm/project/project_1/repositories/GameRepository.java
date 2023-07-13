@@ -15,5 +15,7 @@ public interface GameRepository extends JpaRepository<Game, Integer> {
 
     @Query(value="select setval(pg_get_serial_sequence('games', 'game_id'), coalesce (max(game_id)+1, 1), false) from games", nativeQuery = true)
     public long resetGameSerial();
+
+    public List<Game>findAllByOrderByTitleAsc();
     
 }

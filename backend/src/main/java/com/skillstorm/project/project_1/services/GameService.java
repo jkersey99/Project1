@@ -16,7 +16,7 @@ public class GameService {
     GameRepository gameRepository;
 
     public List<Game> findAllGames() {
-        return gameRepository.findAll();
+        return gameRepository.findAllByOrderByTitleAsc();
     }
 
     public Game findGameById(int id) {

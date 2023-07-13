@@ -1,9 +1,13 @@
 const URL = 'http://localhost:8080/games'
+const URLInv = 'http://localhost:8080/inventory'
+const URLWare = 'http://localhost:8080/warehouses'
 let allGames=[];
+let allWarehouses=[];
 
 
 document.addEventListener('DOMContentLoaded', () => {
     let xhr = new XMLHttpRequest();
+    
 
 
     xhr.onreadystatechange = () => {
@@ -21,7 +25,62 @@ document.addEventListener('DOMContentLoaded', () => {
 
     xhr.send();
 
+    let xhr2 = new XMLHttpRequest();
+
+    xhr2.onreadystatechange = () => {
+
+        if(xhr2.readyState === 4) {
+            let warehouses = JSON.parse(xhr2.responseText);
+            let count = 1;
+            console.log(warehouses);
+            warehouses.forEach(newWarehouse => {
+                allWarehouses.push(newWarehouse);
+                let newDiv = document.createElement("div");
+                let newInput = document.createElement("input");
+                let newLabel = document.createElement("label");
+                let newNode = document.createTextNode(`Warehouse ${count}`);
+                newDiv.class = "form-group";               
+                newInput.type="text";
+                newInput.className = "form-control";
+                newInput.id=`new-warehouse${count}`;
+                newInput.name= `new-warehouse${count}`;
+                newLabel.appendChild(newNode);
+                newDiv.appendChild(newLabel);
+                newDiv.appendChild(newInput);
+                document.getElementById('new-game-form').appendChild(newDiv);
+                let updateDiv = document.createElement("div");
+                let updateInput = document.createElement("input");
+                let updateLabel = document.createElement("label");
+                let updateNode = document.createTextNode(`Warehouse ${count}`);
+                updateDiv.class = "form-group";               
+                updateInput.type="text";
+                updateInput.className = "form-control";
+                updateInput.id=`update-warehouse${count}`;
+                updateInput.name= `update-warehouse${count}`;
+                updateLabel.appendChild(updateNode);
+                updateDiv.appendChild(updateLabel);
+                updateDiv.appendChild(updateInput);
+                document.getElementById('update-game-form').appendChild(updateDiv);
+             
+                count++;    
+            });
+            
+            
+        }
+    };
+
+    xhr2.open('GET', URLWare);
+
+    xhr2.send();
+    
+
 });
+
+function updateWarehouseInventory() {
+
+    
+
+}
 
 document.getElementById('new-game-form').addEventListener('submit', (event) => {
 
@@ -132,6 +191,7 @@ function resetAllForms() {
     document.getElementById('delete-game-form').style.display = 'none';
 }
 
+
 function activateEditForm(gameId) {
 
     for(let g of allGames) {
@@ -145,8 +205,37 @@ function activateEditForm(gameId) {
             document.getElementById('update-game-description').value = g.description;
             document.getElementById('update-game-price').value = g.price;
             document.getElementById('update-game-picture').src = g.image;
-        }
-    }
+
+            fetch(URLInv +`/gameinv?gameId=${gameId}`, {
+                method : 'GET',
+                headers : {
+                    "Content-Type" : "application/json",
+                } 
+            })
+        
+            .then((data) => {
+                return data.json();
+            })
+        
+            .then((invJson) => {
+                console.log(invJson);
+                for(let i = 0; i < invJson.length; i++) {
+                    document.getElementById(`update-warehouse${i+1}`).value = 0;
+
+                    if ((invJson[i] !== "undefined") || (invJson[i].quantity !== null) || (invJson[i].quantity !== undefined)) {
+                        document.getElementById(`update-warehouse${i+1}`).value = invJson[i].quantity;
+                    }
+                    else {
+                        document.getElementById(`update-warehouse${i+1}`).value = 0;
+                    }
+                }
+
+            })
+        
+            .catch((error) => {
+                console.error(error);
+        })
+    }}
 
     document.getElementById('new-game-form').style.display = 'none';
     document.getElementById('update-game-form').style.display = 'block';
@@ -192,6 +281,12 @@ document.getElementById('update-game-form').addEventListener('submit', (event) =
         price : inputData.get('update-game-price')
         
     }
+    let j = 1;
+        for(let i = 1; i < allWarehouses.length +1; i++) {
+            doPostRequest(game.id, i, parseInt(document.getElementById(`update-warehouse${i}`).value));
+            j++;
+        }
+        
 
     fetch(URL + '/game', {
         method : 'PUT',
@@ -217,7 +312,26 @@ document.getElementById('update-game-form').addEventListener('submit', (event) =
     .catch((error) => {
         console.error(error);
     })
+
+    updateWarehouseInventory();
+    resetAllForms();
+    
+
+
 });
+
+async function doPostRequest(gameId, wareId, quantity) {
+
+    let returnedData = await fetch(URLInv + `?wareId=${wareId}&gameId=${gameId}&quantity=${quantity}`, {
+        method : 'PUT',
+    });
+    let game = await returnedData.json();
+    console.log(game);
+}
+
+
+
+
 
 function updateGameInTable (game) {
     document.getElementById('TR' + game.id).innerHTML =`
@@ -230,8 +344,16 @@ function updateGameInTable (game) {
     <td>${game.description}</td>
     <td>${game.price}</td>
     <td><button class="btn btn-primary" id="update-button" onclick="activateEditForm(${game.id})">Edit</button></td>
-    <td><button class="btn btn-primary" id="delete-button" onclick="activateDeleteForm(${game.id})">Delete</button></td>
-    `
+    <td><button class="btn btn-primary" id="delete-button" onclick="activateDeleteForm(${game.id})">Delete</button></td>`
+
+    for(let g of allGames) {
+        if(g.id === game.id) {
+            let i = allGames.indexOf(g);
+            console.log(allGames[i]);
+            allGames[i] = game;
+            console.log(allGames[i]);
+        }
+    }
 
 };
 
@@ -326,7 +448,6 @@ $(document).ready(function(){
                         let game = {
                             id : document.getElementById('update-game-id').value,
                             title : gameTitle,
-                            platform : giantData2.results.platforms[0].name,
                             publisher : giantData2.results.publishers[0].name,
                             releaseDate: giantData2.results.original_release_date,
                             genre : giantData2.results.genres[0].name,
@@ -334,6 +455,13 @@ $(document).ready(function(){
                             price : inputData.get('update-game-price'),
                             image : giantData2.results.image.small_url
                             
+                        }
+
+                        if (document.getElementById('update-game-platform').value !== "") {
+                                game.platform = document.getElementById('update-game-platform').value
+                        }
+                        else {
+                            game.platform = giantData2.results.platforms[0].name
                         }
 
 
@@ -347,6 +475,7 @@ $(document).ready(function(){
                     
                         .then((data) => {
                             return data.json();
+                            wait
                         })
                     
                         .then((gameJson) => {
@@ -373,84 +502,3 @@ $(document).ready(function(){
       
 
 });
-
-/**
-document.getElementById('giantbomb-button').addEventListener('click', (event) => {
-
-    event.preventDefault();
-
-    console.log("test");
-
-    let inputData = new FormData(document.getElementById('update-game-form'));
-
-    let gameTitle = inputData.get('update-game-title');
-
-    giantData = giantBombAPI(gameTitle);
-
-    console.log(giantData);
-
-    let game = {
-            id : document.getElementById('update-game-id').value,
-            title : inputData.get('update-game-title'),
-            platform : inputData.get('update-game-platform'),
-            publisher : giantData.results.publishers.name,
-            releaseDate: giantData.results.original_release_date,
-            genre : giantData.results.genres.name,
-            description : giantData.results.description,
-            price : inputData.get('update-game-price')
-            
-        };
-
-    console.log(game);
-
-    fetch(URL + '/game', {
-        method : 'PUT',
-        headers : {
-            "Content-Type" : "application/json",
-        },
-        body : JSON.stringify(game)
-    })
-
-    .then((data) => {
-        return data.json();
-    })
-
-    .then((gameJson) => {
-        updateGameInTable(gameJson);
-
-        document.getElementById('update-game-form').reset();
-        document.getElementById('new-game-form').style.display = 'block';
-        document.getElementById('update-game-form').style.display = 'none';
-        document.getElementById('delete-game-form').style.display = 'none';
-    })
-
-    .catch((error) => {
-        console.error(error);
-    })
-
-});
-*/
-//document.getElementById('giantbomb-button').addEventListener('click', (event) => {
-
-   // event.preventDefault();
-
-
-//$("giantbomb-button").click ( function (e) {
-  //  e.preventDefault();
-    //let URL = `https://www.giantbomb.com/api/search/?api_key=da0a26a3994cb8bd2bc52f6fe82255ae874430bd&format=jsonp&json_callback=<your callback name>&query=${gameTitle}&resources=game`;
-
-   // var request = new XMLHttpRequest();
-  //  request.open('GET', URL, true);
-  //  request.onload = function() {
-    //    var data=JSON.parse(this.response);
- //       if (request.status >= 200 && request.status < 400) {
-      //      console.log("Successful!");
-      //      return data;
-
-       //     }
- //   }   
-    
-    //request.send();
-   // console.log("step1");
-   
-
