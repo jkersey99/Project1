@@ -36,7 +36,7 @@ public class GameController {
         return new ResponseEntity<List<Game>>(games, HttpStatus.OK);
     }
 
-    @GetMapping("{id}")
+    @GetMapping("/id/{id}")
     public ResponseEntity<Game> findGameById(@PathVariable int id) {
         Game game = gameService.findGameById(id);
         return new ResponseEntity<Game>(game, HttpStatus.OK);
@@ -61,7 +61,7 @@ public class GameController {
         return new ResponseEntity<Game>(updatedGame, HttpStatus.OK);
     }
     
-     @DeleteMapping
+    @DeleteMapping("/delete")
     public ResponseEntity<Game> deleteGame(@RequestBody Game game) {
         gameService.deleteGame(game);
         return ResponseEntity.noContent().build();

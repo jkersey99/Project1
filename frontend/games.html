@@ -98,7 +98,7 @@
                         <input id="update-game-description" name="update-game-description" type="text" class="form-control"/>
                     </div>
 
-                    <div class="form-group">
+                    <div id="before-buttons" class="form-group">
                         <label>Price</label>
                         <input id="update-game-price" name="update-game-price" type="text" class="form-control"/>
                     </div>
@@ -106,13 +106,12 @@
                     <div class="form-group">
                         <input id="update-button" name="update-button" type="submit" value="Update" class="btn btn-primary" />
                         <input id="update-cancel-button" name="update-cancel-button" type="submit" value="Cancel" class="btn btn-secondary" />
-                        <input id="giantbomb-button" name="giantbomb-button" type="submit" value="GiantBomb" class="btn btn-primary" />
                     </div>
                     <br/>
                     <br/>
                     <div class="form-group">
-                        <label>Price</label>
-                        <img src="" id="update-game-picture" name="update-game-picture" alt="game box" class="form-control"/>
+                        <label>Picture</label>
+                        <img style="height: auto; max-width: 30%;" src="" id="update-game-picture" name="update-game-picture" alt="game box" class="form-control"/>
                     </div>
 
                 </form>
@@ -163,10 +162,16 @@
                         <input id="delete-button" name="delete-button" type="submit" value="Delete" class="btn btn-primary" />
                         <input id="delete-cancel-button" name="delete-cancel-button" type="submit" value="Cancel" class="btn btn-secondary" />
                     </div>
+                    <br/>
+                    <br/>
+                    <div class="form-group">
+                        <label>Picture</label>
+                        <img src="" id="delete-game-picture" name="delete-game-picture" alt="game box" class="form-control"/>
+                    </div>
                 </form>
             </div>
 
-            <div class="col-lg-6">
+            <div id="table" class="col-lg-6">
 
                 <table class="table table-primary-hover">
 

@@ -21,6 +21,7 @@ import com.skillstorm.project.project_1.models.Warehouse;
 import com.skillstorm.project.project_1.services.WarehouseService;
 import org.springframework.web.bind.annotation.RestController;
 
+
 @RestController
 @RequestMapping("/warehouses")
 @CrossOrigin
@@ -52,12 +53,18 @@ public class WarehouseController {
     @PostMapping
     public ResponseEntity<Warehouse> createWarehouse(@Valid @RequestBody Warehouse warehouse) {
         Warehouse newWarehouse = warehouseService.saveWarehouse(warehouse);
+        if (newWarehouse==null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
         return new ResponseEntity<Warehouse>(newWarehouse, HttpStatus.CREATED);
     }
 
     @PutMapping("/warehouse")
     public ResponseEntity<Warehouse> updateWarehouse(@RequestBody Warehouse warehouse) {
         Warehouse newWarehouse = warehouseService.saveWarehouse(warehouse);
+        if (newWarehouse==null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
         return new ResponseEntity<Warehouse>(newWarehouse, HttpStatus.OK);
 
     }

@@ -32,8 +32,12 @@ public class WarehouseInventoryService {
         return null;
     }
 
-    public WarehouseInventory saveInventory(WarehouseInventory inventory) {
-        return warehouseInvetoryRepository.save(inventory);
+    public int newInventory(int wareId, int gameId, int quantity) {
+        return warehouseInvetoryRepository.newInventory(wareId, gameId, quantity);
+    }
+
+    public int updateInventory(int wareId, int gameId, int quantity) {
+        return warehouseInvetoryRepository.updateInventory(wareId, gameId, quantity);
     }
 
     public void deleteInventory(WarehouseInventory inventory) {

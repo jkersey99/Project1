@@ -1,5 +1,8 @@
 const URL = 'http://localhost:8080/warehouses'
+const URLInv = 'http://localhost:8080/inventory'
+const URLGame = 'http://localhost:8080/games'
 let allWarehouses=[];
+let allGames=[];
 
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -20,6 +23,54 @@ document.addEventListener('DOMContentLoaded', () => {
     xhr.open('GET', URL);
 
     xhr.send();
+
+    let xhr2 = new XMLHttpRequest();
+
+    xhr2.onreadystatechange = () => {
+
+        if(xhr2.readyState === 4) {
+            let games = JSON.parse(xhr2.responseText);
+            let count = 1;
+            console.log(games);
+            games.forEach(newGame => {
+                allGames.push(newGame);
+                let newDiv = document.createElement("div");
+                let newInput = document.createElement("input");
+                let newLabel = document.createElement("label");
+                let newNode = document.createTextNode(`Game ${count}`);
+                newDiv.class = "form-group";               
+                newInput.type="text";
+                newInput.className = "form-control";
+                newInput.id=`new-game${count}`;
+                newInput.name= `new-game${count}`;
+                newLabel.appendChild(newNode);
+                newDiv.appendChild(newLabel);
+                newDiv.appendChild(newInput);
+                document.getElementById('new-warehouse-form').appendChild(newDiv);
+                let updateDiv = document.createElement("div");
+                let updateInput = document.createElement("input");
+                let updateLabel = document.createElement("label");
+                let updateNode = document.createTextNode(`Game ${count}`);
+                updateDiv.class = "form-group";               
+                updateInput.type="text";
+                updateInput.className = "form-control";
+                updateInput.id=`update-game${count}`;
+                updateInput.name= `update-game${count}`;
+                updateLabel.appendChild(updateNode);
+                updateDiv.appendChild(updateLabel);
+                updateDiv.appendChild(updateInput);
+                document.getElementById('update-warehouse-form').appendChild(updateDiv);
+             
+                count++;    
+            });
+            
+            
+        }
+    };
+
+    xhr2.open('GET', URLGame);
+
+    xhr2.send();
 
 });
 
@@ -138,6 +189,36 @@ function activateEditForm(warehouseId) {
         }
     }
 
+    fetch(URLInv +`/warehouseinv?wareId=${warehouseId}`, {
+        method : 'GET',
+        headers : {
+            "Content-Type" : "application/json",
+        } 
+    })
+
+    .then((data) => {
+        return data.json();
+    })
+
+    .then((invJson) => {
+        console.log(invJson);
+        for(let i = 0; i < invJson.length; i++) {
+            document.getElementById(`update-game${i+1}`).value = 0;
+
+            if ((invJson[i] !== "undefined") || (invJson[i].quantity !== null) || (invJson[i].quantity !== undefined)) {
+                document.getElementById(`update-game${i+1}`).value = invJson[i].quantity;
+                
+            }
+            else {
+                document.getElementById(`update-game${i+1}`).value = 0;
+            }
+        }
+    })
+
+    .catch((error) => {
+        console.error(error);
+})
+
     document.getElementById('new-warehouse-form').style.display = 'none';
     document.getElementById('update-warehouse-form').style.display = 'block';
     document.getElementById('delete-warehouse-form').style.display = 'none';
@@ -181,30 +262,51 @@ document.getElementById('update-warehouse-form').addEventListener('submit', (eve
         }
     }
 
-    fetch(URL + '/warehouse', {
-        method : 'PUT',
-        headers : {
-            "Content-Type" : "application/json",
-        },
-        body : JSON.stringify(warehouse)
-    })
+    let wareQuant = 0;
+        let overInv = false;
+        for(let i = 1; i < allGames.length +1; i++) {
+            wareQuant += parseInt(document.getElementById(`update-game${i}`).value);
+            if (wareQuant > warehouse.maxInv) {
+                overInv = true;
+            }
+    warehouse.currInv = wareQuant;
+            
+        }
+        if (overInv) {
+            window.alert("You are over this warehouse's maximum capacity by " + (wareQuant - warehouse.maxInv) + ". Please adjust your numbers and try again.")
+        }
+        else {
+            for(let i = 1; i < allGames.length +1; i++) {
+                
+                doPutRequest(i, warehouse.id, parseInt(document.getElementById(`update-game${i}`).value));
 
-    .then((data) => {
-        return data.json();
-    })
-
-    .then((warehouseJson) => {
-        updateWarehouseInTable(warehouseJson);
-
-        document.getElementById('update-warehouse-form').reset();
-        document.getElementById('new-warehouse-form').style.display = 'block';
-        document.getElementById('update-warehouse-form').style.display = 'none';
-        document.getElementById('delete-warehouse-form').style.display = 'none';
-    })
-
-    .catch((error) => {
-        console.error(error);
-    })
+                fetch(URL + '/warehouse', {
+                    method : 'PUT',
+                    headers : {
+                        "Content-Type" : "application/json",
+                    },
+                    body : JSON.stringify(warehouse)
+                })
+            
+                .then((data) => {
+                    return data.json();
+                })
+            
+                .then((warehouseJson) => {
+                    updateWarehouseInTable(warehouseJson);
+            
+                    document.getElementById('update-warehouse-form').reset();
+                    document.getElementById('new-warehouse-form').style.display = 'block';
+                    document.getElementById('update-warehouse-form').style.display = 'none';
+                    document.getElementById('delete-warehouse-form').style.display = 'none';
+                })
+            
+                .catch((error) => {
+                    console.error(error);
+                })
+                
+            }
+        }   
 });
 
 function updateWarehouseInTable (warehouse) {
@@ -268,3 +370,12 @@ function removeWarehouseFromTable(warehouse) {
     const element = document.getElementById('TR' + warehouse.id);
     element.remove();
 };
+
+async function doPutRequest(gameId, wareId, quantity) {
+
+    let returnedData = await fetch(URLInv + `?wareId=${wareId}&gameId=${gameId}&quantity=${quantity}`, {
+        method : 'PUT',
+    });
+    let game = await returnedData.json();
+    console.log(game);
+}

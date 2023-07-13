@@ -16,7 +16,7 @@ public class GameService {
     GameRepository gameRepository;
 
     public List<Game> findAllGames() {
-        return gameRepository.findAll();
+        return gameRepository.findAllByOrderByTitleAsc();
     }
 
     public Game findGameById(int id) {
@@ -42,7 +42,8 @@ public class GameService {
     }
     
     public void deleteGame(Game game) {
-        gameRepository.delete(game);
+        int gameId = game.getId();
+        gameRepository.deleteGame(gameId);
         gameRepository.resetGameSerial();
     }
    

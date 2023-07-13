@@ -2,8 +2,6 @@ package com.skillstorm.project.project_1.controllers;
 
 import java.util.List;
 
-import javax.validation.Valid;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -42,15 +40,15 @@ public class WarehouseInventoryController {
     }
 
     @PostMapping
-    public ResponseEntity<WarehouseInventory> newInventory(@Valid @RequestBody WarehouseInventory inventory) {
-        WarehouseInventory newInventory = warehouseInventoryService.saveInventory(inventory);
-        return new ResponseEntity<WarehouseInventory>(newInventory, HttpStatus.OK);
+    public ResponseEntity<Integer> saveInventory(@RequestParam("wareId") int wareId, @RequestParam("gameId") int gameId, @RequestParam("quantity") int quantity) {
+        int newInventory = warehouseInventoryService.newInventory(wareId, gameId, quantity);
+        return new ResponseEntity<Integer>(newInventory, HttpStatus.OK);
     }
 
     @PutMapping
-    public ResponseEntity<WarehouseInventory> updateInventory(@RequestBody WarehouseInventory inventory) {
-        WarehouseInventory updateInventory = warehouseInventoryService.saveInventory(inventory);
-        return new ResponseEntity<WarehouseInventory>(updateInventory, HttpStatus.OK);
+    public ResponseEntity<Integer> updateInventory(@RequestParam("wareId") int wareId, @RequestParam("gameId") int gameId, @RequestParam("quantity") int quantity) {
+        int updateInventory = warehouseInventoryService.updateInventory(wareId, gameId, quantity);
+        return new ResponseEntity<Integer>(updateInventory, HttpStatus.OK);
     }
 
     @DeleteMapping
