@@ -424,6 +424,7 @@ document.getElementById('delete-game-form').addEventListener('submit', (event) =
     let genreOnForm = document.getElementById('delete-game-genre').value;
     let descriptionOnForm = document.getElementById('delete-game-description').value;
     let priceOnForm = document.getElementById('delete-game-price').value;
+    let imageOnForm = document.getElementById('delete-game-picture').src;
 
     let game = {
         id : idOnForm,
@@ -433,11 +434,12 @@ document.getElementById('delete-game-form').addEventListener('submit', (event) =
         releaseDate : releaseDateOnForm,
         genre : genreOnForm,
         description : descriptionOnForm,
-        price : priceOnForm
-        
+        price : priceOnForm,
+        image : imageOnForm
     };
+    console.log(game);
 
-    fetch(URL, {
+    fetch(URL + '/delete', {
         method: 'DELETE',
         headers: {
             "Content-Type" : "application/json"
@@ -445,28 +447,25 @@ document.getElementById('delete-game-form').addEventListener('submit', (event) =
         body : JSON.stringify(game)
     })
     .then((data) => {
+        return data;
+    })
+    .then(() => {
 
-        if(data.status === 204) {
-            for (let i = 0; i < allWarehouses.length; i++){
-                console.log(allWarehouses[i].currInv);
-                console.log(parseInt(document.getElementById(`delete-warehouse${i+1}`).value))
-                allWarehouses[i].currInv -= parseInt(document.getElementById(`delete-warehouse${i+1}`).value);
-                console.log(allWarehouses[i].currInv);
-                doWareRequest(allWarehouses[i])
-            }
-
-            
-
-            removeGameFromTable(game);
-
-            resetAllForms();
-        }
     })
     .catch((error) => {
         console.error(error);
     })
 
+    for (let i = 0; i < allWarehouses.length; i++){
+        console.log(allWarehouses[i].currInv);
+        console.log(parseInt(document.getElementById(`delete-warehouse${i+1}`).value))
+        allWarehouses[i].currInv -= parseInt(document.getElementById(`delete-warehouse${i+1}`).value);
+        console.log(allWarehouses[i].currInv);
+        doWareRequest(allWarehouses[i])
+    }
+    removeGameFromTable(game);
 
+    resetAllForms();
 
 
 

@@ -42,7 +42,8 @@ public class GameService {
     }
     
     public void deleteGame(Game game) {
-        gameRepository.delete(game);
+        int gameId = game.getId();
+        gameRepository.deleteGame(gameId);
         gameRepository.resetGameSerial();
     }
    
