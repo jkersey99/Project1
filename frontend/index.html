@@ -10,15 +10,16 @@
         <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
         <!-- Core theme CSS (includes Bootstrap)-->
         <link href="css/styles.css" rel="stylesheet" />
+        <script src="js/warehouses.js"></script>
     </head>
     <body>
         <div class="d-flex" id="wrapper">
             <!-- Sidebar-->
-            <div class="border-end bg-white" id="sidebar-wrapper">
-                <div class="sidebar-heading border-bottom bg-light">Start Bootstrap</div>
+            <div class="border-end bg-white" id="sidebar-wrapper" >
+                <div class="sidebar-heading border-bottom bg-light">Video Game Warehouse</div>
                 <div class="list-group list-group-flush">
-                    <a class="list-group-item list-group-item-action list-group-item-light p-3" href="#!">Dashboard</a>
-                    <a class="list-group-item list-group-item-action list-group-item-light p-3" href="#!">Shortcuts</a>
+                    <a class="list-group-item list-group-item-action list-group-item-light p-3" href="#!">Warehouses</a>
+                    <a class="list-group-item list-group-item-action list-group-item-light p-3" href="./games.html">Games</a>
                     <a class="list-group-item list-group-item-action list-group-item-light p-3" href="#!">Overview</a>
                     <a class="list-group-item list-group-item-action list-group-item-light p-3" href="#!">Events</a>
                     <a class="list-group-item list-group-item-action list-group-item-light p-3" href="#!">Profile</a>
@@ -30,36 +31,175 @@
                 <!-- Top navigation-->
                 <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
                     <div class="container-fluid">
-                        <button class="btn btn-primary" id="sidebarToggle">Toggle Menu</button>
-                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
-                        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                            <ul class="navbar-nav ms-auto mt-2 mt-lg-0">
-                                <li class="nav-item active"><a class="nav-link" href="#!">Home</a></li>
-                                <li class="nav-item"><a class="nav-link" href="#!">Link</a></li>
-                                <li class="nav-item dropdown">
-                                    <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Dropdown</a>
-                                    <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                                        <a class="dropdown-item" href="#!">Action</a>
-                                        <a class="dropdown-item" href="#!">Another action</a>
-                                        <div class="dropdown-divider"></div>
-                                        <a class="dropdown-item" href="#!">Something else here</a>
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
+                        <button class="btn btn-primary" id="new-warehouse-button">New Warehouse</button>
+                        <button class="btn btn-primary" id="new-warehouse-cancel" style="display: none;">Cancel</button>
+                        
                     </div>
                 </nav>
                 <!-- Page content-->
-                <div class="container-fluid">
-                    <h1 class="mt-4">Simple Sidebar</h1>
-                    <p>The starting state of the menu will appear collapsed on smaller screens, and will appear non-collapsed on larger screens. When toggled using the button below, the menu will change.</p>
-                    <p>
-                        Make sure to keep all page content within the
-                        <code>#page-content-wrapper</code>
-                        . The top navbar is optional, and just for demonstration. Just create an element with the
-                        <code>#sidebarToggle</code>
-                        ID which will toggle the menu when clicked.
-                    </p>
+                <div class="container-fluid" id="top-half">
+                    <br>
+                    <form id="new-warehouse-form" action="#" style="display: none;" >
+
+                        <div class="form-group">
+                            <label>Warehouse Name</label>
+                            <input id="new-warehouse-name" name="new-warehouse-name" type="text" class="form-control"/>
+                        </div>
+    
+                        <div class="form-group">
+                            <label>Manager</label>
+                            <input id="new-warehouse-manager" name="new-warehouse-manager" type="text" class="form-control"/>
+                        </div>
+    
+                        <div class="form-group">
+                            <label>Maximum Inventory</label>
+                            <input id="new-warehouse-maxinv" name="new-warehouse-maxinv" type="text" class="form-control"/>
+                        </div>
+    
+                        <div class="form-group" style="display: inline-block">
+                            <label>City</label>
+                            <input id="new-warehouse-city" name="new-warehouse-city" type="text" class="form-control"/>
+                        </div>
+    
+                        <div class="form-group" style="display: inline-block">
+                            <label>State</label>
+                            <input id="new-warehouse-state" name="new-warehouse-state" type="text" class="form-control"/>
+                        </div>
+    
+                        <div class="form-group" style="display: inline-block">
+                            <label>Zip</label>
+                            <input id="new-warehouse-zip" name="new-warehouse-zip" type="text" class="form-control"/>
+                        </div>
+                        <br>
+                        <br>
+                        <div class="form-group">
+                            <input id="save-button" name="save-button" type="submit" value="Save" class="btn btn-primary" />
+                        </div>
+    
+                    </form>
+
+    
+                    <form id="update-warehouse-form" action="#" style="display:none;">
+    
+                        <div class="form-group">
+                            <input id="update-warehouse-id" name="update-warehouse-id" type="text" class="form-control" style="display:none"/>
+                        </div>
+    
+                        <div class="form-group">
+                            <label>Warehouse Name</label>
+                            <input id="update-warehouse-name" name="update-warehouse-name" type="text" class="form-control"/>
+                        </div>
+    
+                        <div class="form-group">
+                            <label>Manager</label>
+                            <input id="update-warehouse-manager" name="update-warehouse-manager" type="text" class="form-control"/>
+                        </div>
+    
+                        <div class="form-group">
+                            <label>Maximum Inventory</label>
+                            <input id="update-warehouse-maxinv" name="update-warehouse-maxinv" type="text" class="form-control"/>
+                        </div>
+    
+                        <div id="update-city-div" class="form-group" style="display: inline-block">
+                            <label>City</label>
+                            <input id="update-warehouse-city" name="update-warehouse-city" type="text" class="form-control"/>
+                        </div>
+    
+                        <div id="update-state-div" class="form-group" style="display: inline-block">
+                            <label>State</label>
+                            <input id="update-warehouse-state" name="update-warehouse-state" type="text" class="form-control"/>
+                        </div>
+    
+                        <div id="update-zip-div" class="form-group" style="display: inline-block">
+                            <label>Zip</label>
+                            <input id="update-warehouse-zip" name="update-warehouse-zip" type="text" class="form-control"/>
+                        </div>
+                        <br>
+                        <br>
+    
+                        <div class="form-group">
+                            <input id="update-button" name="update-button" type="submit" value="Update" class="btn btn-primary" />
+                            <input id="update-cancel-button" name="update-cancel-button" type="submit" value="Cancel" class="btn btn-secondary" />
+                        </div>
+                    </form>
+    
+                    <form id="delete-warehouse-form" action="#" style="display:none;">
+    
+                        <div class="form-group">
+                            <label style="display:none">Warehouse ID</label>
+                            <input id="delete-warehouse-id" name="delete-warehouse-id" type="text" class="form-control" style="display:none" disabled/>
+                        </div>
+    
+                        <div class="form-group">
+                            <label>Warehouse Name</label>
+                            <input id="delete-warehouse-name" name="delete-warehouse-name" type="text" class="form-control" disabled/>
+                        </div>
+    
+                        <div class="form-group">
+                            <label>Warehouse Manager</label>
+                            <input id="delete-warehouse-manager" name="delete-warehouse-manager" type="text" class="form-control" disabled/>
+                        </div>
+    
+                        <div class="form-group">
+                            <label>Warehouse Maximum Inventory</label>
+                            <input id="delete-warehouse-maxinv" name="delete-warehouse-maxinv" type="text" class="form-control" disabled/>
+                        </div>
+    
+                        <div class="form-group" style="display: inline-block">
+                            <label>Warehouse City</label>
+                            <input id="delete-warehouse-city" name="delete-warehouse-city" type="text" class="form-control" disabled/>
+                        </div>
+    
+                        <div class="form-group" style="display: inline-block">
+                            <label>Warehouse State</label>
+                            <input id="delete-warehouse-state" name="delete-warehouse-state" type="text" class="form-control" disabled/>
+                        </div>
+    
+                        <div class="form-group" style="display: inline-block">
+                            <label>Warehouse Zip</label>
+                            <input id="delete-warehouse-zip" name="delete-warehouse-zip" type="text" class="form-control" disabled/>
+                        </div>
+                        <br>
+                        <br>
+    
+                        <div class="form-group">
+                            <input id="delete-button" name="delete-button" type="submit" value="Delete" class="btn btn-primary" />
+                            <input id="delete-cancel-button" name="delete-cancel-button" type="submit" value="Cancel" class="btn btn-secondary" />
+                        </div>
+                    </form>
+                </div>
+               <div id="warehouse-table-div" class="table" >
+                    <table id="warehouse-table" class="table table-striped table-hover">
+
+                        <thead class="table-dark">
+                            <tr>
+                                <th style="display:none">ID</th>
+                                <th>Warehouse Name</th>
+                                <th>Manager</th>
+                                <th>Maximum Inventory</th>
+                                <th>Location</th>
+                                <th>Edit</th>
+                                <th>Delete</th>
+                            </tr>
+                        </thead>
+                        <tbody id="warehouse-table-body">
+                        </tbody>
+                    </table>
+                    <table id="game-table" class="table table-striped table-hover">
+
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Game Title</th>
+                                <th>Platform</th>
+                                <th>Release Date</th>
+                                <th>Quantity</th>
+                                <th>Edit</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="game-table-body">
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>

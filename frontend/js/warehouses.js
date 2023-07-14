@@ -1,5 +1,8 @@
 const URL = 'http://localhost:8080/warehouses'
+const URLInv = 'http://localhost:8080/inventory'
+const URLGame = 'http://localhost:8080/games'
 let allWarehouses=[];
+let allGames=[];
 
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -12,7 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
             let warehouses = JSON.parse(xhr.responseText);
 
             warehouses.forEach(newWarehouse => {
-                addWarehouseToSidebar(newWarehouse)
+                addWarehouseToTable(newWarehouse)
             });
         }
     };
@@ -21,7 +24,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
     xhr.send();
 
-});
+    let xhr2 = new XMLHttpRequest();
+
+    xhr2.onreadystatechange = () => {
+
+        if(xhr2.readyState === 4) {
+            let games = JSON.parse(xhr2.responseText);
+            games.forEach(newGame => {
+                allGames.push(newGame);
+                
+            });
+        }
+    };
+
+    xhr2.open('GET', URLGame);
+
+    xhr2.send();
+
 
 document.getElementById('new-warehouse-form').addEventListener('submit', (event) => {
 
@@ -65,7 +84,35 @@ document.getElementById('new-warehouse-form').addEventListener('submit', (event)
     resetAllForms();
 });
 
-function addWarehouseToSidebar(newWarehouse) {
+document.getElementById('new-warehouse-button').addEventListener("click", (event) => {
+
+    event.preventDefault();
+
+    document.getElementById('new-warehouse-form').reset();
+    document.getElementById('update-warehouse-form').reset();
+    document.getElementById('delete-warehouse-form').reset();
+
+    document.getElementById('new-warehouse-form').style.display = 'block';
+    document.getElementById('update-warehouse-form').style.display = 'none';
+    document.getElementById('delete-warehouse-form').style.display = 'none';
+
+    document.getElementById('new-warehouse-button').style.display = 'none';
+    document.getElementById('new-warehouse-cancel').style.display = 'block';
+});
+
+document.getElementById('new-warehouse-cancel').addEventListener("click", (event) => {
+    event.preventDefault();
+
+    document.getElementById('new-warehouse-form').style.display = 'none';
+    document.getElementById('update-warehouse-form').style.display = 'none';
+    document.getElementById('delete-warehouse-form').style.display = 'none';
+
+    document.getElementById('new-warehouse-button').style.display = 'block';
+    document.getElementById('new-warehouse-cancel').style.display = 'none';
+});
+
+
+function addWarehouseToTable(newWarehouse) {
     let tr = document.createElement('tr');
     let id = document.createElement('td');
     let name = document.createElement('td');
@@ -76,6 +123,7 @@ function addWarehouseToSidebar(newWarehouse) {
     let deleteBtn = document.createElement('td');
 
     id.innerText = newWarehouse.id;
+    id.style.display = "none";
     name.innerText = newWarehouse.name;
     manager.innerText= newWarehouse.manager;
     maxInv.innerText = newWarehouse.maxInv;
@@ -103,6 +151,8 @@ function addWarehouseToSidebar(newWarehouse) {
 };
 
 
+
+
 document.getElementById('update-cancel-button').addEventListener('click', (event) => {
     event.preventDefault();
     resetAllForms();
@@ -119,49 +169,14 @@ function resetAllForms() {
     document.getElementById('update-warehouse-form').reset();
     document.getElementById('delete-warehouse-form').reset();
 
-    document.getElementById('new-warehouse-form').style.display = 'block';
-    document.getElementById('update-warehouse-form').style.display = 'none';
-    document.getElementById('delete-warehouse-form').style.display = 'none';
-}
-
-function activateEditForm(warehouseId) {
-
-    for(let w of allWarehouses) {
-        if(w.id === warehouseId) {
-            document.getElementById('update-warehouse-id').value = w.id;
-            document.getElementById('update-warehouse-name').value = w.name;
-            document.getElementById('update-warehouse-manager').value = w.manager;
-            document.getElementById('update-warehouse-maxinv').value = w.maxInv;
-            document.getElementById('update-warehouse-city').value = w.city.city;
-            document.getElementById('update-warehouse-state').value = w.city.state;
-            document.getElementById('update-warehouse-zip').value = w.city.zip;
-        }
-    }
-
-    document.getElementById('new-warehouse-form').style.display = 'none';
-    document.getElementById('update-warehouse-form').style.display = 'block';
-    document.getElementById('delete-warehouse-form').style.display = 'none';
-    
-}
-
-function activateDeleteForm(warehouseId) {
-
-    for(let w of allWarehouses) {
-        if(w.id === warehouseId) {
-            document.getElementById('delete-warehouse-id').value = w.id;
-            document.getElementById('delete-warehouse-name').value = w.name;
-            document.getElementById('delete-warehouse-manager').value = w.manager;
-            document.getElementById('delete-warehouse-maxinv').value = w.maxInv;
-            document.getElementById('delete-warehouse-city').value = w.city.city;
-            document.getElementById('delete-warehouse-state').value = w.city.state;
-            document.getElementById('delete-warehouse-zip').value = w.city.zip;
-        }
-    }
-
     document.getElementById('new-warehouse-form').style.display = 'none';
     document.getElementById('update-warehouse-form').style.display = 'none';
-    document.getElementById('delete-warehouse-form').style.display = 'block';
+    document.getElementById('delete-warehouse-form').style.display = 'none';
+    document.getElementById('game-table').style.visibility = 'hidden';
+    document.getElementById('warehouse-table').style.display= 'block';
 }
+
+
 
 document.getElementById('update-warehouse-form').addEventListener('submit', (event) => {
 
@@ -181,30 +196,51 @@ document.getElementById('update-warehouse-form').addEventListener('submit', (eve
         }
     }
 
-    fetch(URL + '/warehouse', {
-        method : 'PUT',
-        headers : {
-            "Content-Type" : "application/json",
-        },
-        body : JSON.stringify(warehouse)
-    })
+    let wareQuant = 0;
+        let overInv = false;
+        for(let i = 1; i < allGames.length +1; i++) {
+            wareQuant += parseInt(document.getElementById(`update-game${i}`).value);
+            if (wareQuant > warehouse.maxInv) {
+                overInv = true;
+            }
+    warehouse.currInv = wareQuant;
+            
+        }
+        if (overInv) {
+            window.alert("You are over this warehouse's maximum capacity by " + (wareQuant - warehouse.maxInv) + ". Please adjust your numbers and try again.")
+        }
+        else {
+            for(let i = 1; i < allGames.length +1; i++) {
+                
+                doPutRequest(i, warehouse.id, parseInt(document.getElementById(`update-game${i}`).value));
 
-    .then((data) => {
-        return data.json();
-    })
-
-    .then((warehouseJson) => {
-        updateWarehouseInTable(warehouseJson);
-
-        document.getElementById('update-warehouse-form').reset();
-        document.getElementById('new-warehouse-form').style.display = 'block';
-        document.getElementById('update-warehouse-form').style.display = 'none';
-        document.getElementById('delete-warehouse-form').style.display = 'none';
-    })
-
-    .catch((error) => {
-        console.error(error);
-    })
+                fetch(URL + '/warehouse', {
+                    method : 'PUT',
+                    headers : {
+                        "Content-Type" : "application/json",
+                    },
+                    body : JSON.stringify(warehouse)
+                })
+            
+                .then((data) => {
+                    return data.json();
+                })
+            
+                .then((warehouseJson) => {
+                    updateWarehouseInTable(warehouseJson);
+            
+                    document.getElementById('update-warehouse-form').reset();
+                    document.getElementById('new-warehouse-form').style.display = 'block';
+                    document.getElementById('update-warehouse-form').style.display = 'none';
+                    document.getElementById('delete-warehouse-form').style.display = 'none';
+                })
+            
+                .catch((error) => {
+                    console.error(error);
+                })
+                
+            }
+        }   
 });
 
 function updateWarehouseInTable (warehouse) {
@@ -268,3 +304,156 @@ function removeWarehouseFromTable(warehouse) {
     const element = document.getElementById('TR' + warehouse.id);
     element.remove();
 };
+
+async function doPutRequest(gameId, wareId, quantity) {
+
+    let returnedData = await fetch(URLInv + `?wareId=${wareId}&gameId=${gameId}&quantity=${quantity}`, {
+        method : 'PUT',
+    });
+    let game = await returnedData.json();
+    console.log(game);
+}
+});
+
+function activateEditForm(warehouseId) {
+
+    for(let w of allWarehouses) {
+        if(w.id === warehouseId) {
+            document.getElementById('update-warehouse-id').value = w.id;
+            document.getElementById('update-warehouse-name').value = w.name;
+            document.getElementById('update-warehouse-manager').value = w.manager;
+            document.getElementById('update-warehouse-maxinv').value = w.maxInv;
+            document.getElementById('update-warehouse-city').value = w.city.city;
+            document.getElementById('update-warehouse-state').value = w.city.state;
+            document.getElementById('update-warehouse-zip').value = w.city.zip;
+        }
+    }
+
+    fetch(URLInv +`/warehouseinv?wareId=${warehouseId}`, {
+        method : 'GET',
+        headers : {
+            "Content-Type" : "application/json",
+        } 
+    })
+
+    .then((data) => {
+        return data.json();
+    })
+    
+    .then((invJson) => {
+        let sortedJson = invJson.sort((g1, g2) => (g1.game.title > g2.game.title) ? 1 : (g1.game.title < g2.game.title) ? -1 : 0);
+        for (let i = 0; i < invJson.length; i++) {
+            console.log(invJson);
+            
+            addGameToTable(sortedJson[i].game, sortedJson[i].quantity);
+        }
+        document.getElementById('warehouse-table').style.display='none';
+        document.getElementById('game-table').style.visibility = 'visible';
+        document.getElementById('new-warehouse-form').style.display = 'none';
+        document.getElementById('update-warehouse-form').style.display = 'block';
+        document.getElementById('delete-warehouse-form').style.display = 'none';
+        
+
+        
+    })
+
+    .catch((error) => {
+        console.error(error);
+})
+    
+    
+}
+
+function activateDeleteForm(warehouseId) {
+
+    for(let w of allWarehouses) {
+        if(w.id === warehouseId) {
+            document.getElementById('delete-warehouse-id').value = w.id;
+            document.getElementById('delete-warehouse-name').value = w.name;
+            document.getElementById('delete-warehouse-manager').value = w.manager;
+            document.getElementById('delete-warehouse-maxinv').value = w.maxInv;
+            document.getElementById('delete-warehouse-city').value = w.city.city;
+            document.getElementById('delete-warehouse-state').value = w.city.state;
+            document.getElementById('delete-warehouse-zip').value = w.city.zip;
+        }
+    }
+
+    fetch(URLInv +`/warehouseinv?wareId=${warehouseId}`, {
+        method : 'GET',
+        headers : {
+            "Content-Type" : "application/json",
+        } 
+    })
+
+    .then((data) => {
+        return data.json();
+    })
+    
+    .then((invJson) => {
+        let sortedJson = invJson.sort((g1, g2) => (g1.game.title > g2.game.title) ? 1 : (g1.game.title < g2.game.title) ? -1 : 0);
+        for (let i = 0; i < invJson.length; i++) {
+            console.log(invJson);
+            
+            addGameToTable(sortedJson[i].game, sortedJson[i].quantity);
+        }
+        document.getElementById('warehouse-table').style.display='none';
+        document.getElementById('game-table').style.visibility = 'visible';
+        document.getElementById('new-warehouse-form').style.display = 'none';
+        document.getElementById('update-warehouse-form').style.display = 'none';
+        document.getElementById('delete-warehouse-form').style.display = 'block';
+        
+
+        
+    })
+
+    .catch((error) => {
+        console.error(error);
+})
+}
+
+function addGameToTable(newGame, quantity) {
+    let gameTr = document.createElement('tr');
+    let gameId = document.createElement('td');
+    let gameTitle = document.createElement('td');
+    let platform = document.createElement('td');
+    let releaseDate = document.createElement('td');  
+    let quant = document.createElement('td');  
+    let editBtn = document.createElement('td');  
+    let deleteBtn = document.createElement('td');
+
+    
+
+    gameId.innerText = newGame.id;
+    gameId.style.display = "none";
+    gameTitle.innerText = newGame.title;
+    platform.innerText= newGame.platform;
+    releaseDate.innerText = newGame.releaseDate;
+    quant.innerHTML = `<input id="${newGame.id}-quant" name="${newGame.id}-quant" type="text" class="form-control" value="${quantity}disabled/>`
+    quant.innerText = quantity;
+    deleteBtn.style.display = "none";
+
+    editBtn.innerHTML = 
+    `<button class="btn btn-primary" id="${newGame.id}-quant-button" onclick="quantEditButton(${newGame.id})">Edit</button><button class="btn btn-primary" id="${newGame.id}-cancel-button" onclick="activateCancelButton(${newGame.id})" style="display:none;">Cancel</button>`;
+
+    gameTr.appendChild(gameId);
+    gameTr.appendChild(gameTitle);
+    gameTr.appendChild(platform);
+    gameTr.appendChild(releaseDate);
+    gameTr.appendChild(quant);
+    gameTr.appendChild(editBtn);
+    gameTr.appendChild(deleteBtn);
+
+    gameTr.setAttribute('id', 'TR' + newGame.id);
+
+    document.getElementById('game-table-body').appendChild(gameTr);
+};
+
+function quantEditButton (gameId) {
+    document.getElementById(`${gameId}-quant`).setAttribute("disabled", false);
+    document.getElementById(`${gameId}-quant-button`).style.display="none";
+    document.getElementById(`${gameId}-cancel-button`).style.visibility="visible";
+}
+
+function activateCancelButton(gameId) {
+
+}
