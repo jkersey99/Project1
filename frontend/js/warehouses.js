@@ -49,6 +49,12 @@ document.getElementById('new-warehouse-form').addEventListener('submit', (event)
 
     event.preventDefault();
 
+    // makes sure Maximum Inventory is a number
+    if (isNaN(document.getElementById('new-warehouse-maxinv').value)) {
+        window.alert("Maximum Inventory must be a number");
+        return;
+    };
+
     let inputData = new FormData(document.getElementById('new-warehouse-form'));
 
     // assembles the warehouse object
@@ -198,6 +204,11 @@ document.getElementById('update-warehouse-form').addEventListener('submit', (eve
     event.preventDefault();
 
     let inputData = new FormData(document.getElementById('update-warehouse-form'));
+
+    if (isNaN(document.getElementById('update-warehouse-maxinv').value)) {
+        window.alert("Maximum Inventory must be a number");
+        return;
+    };
 
     // creates the warehouse object
     let warehouse = {
