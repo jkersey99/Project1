@@ -11,16 +11,19 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 
+// Maps to junction table
 @Entity
 @Table(name="ware_inv")
-@IdClass(CompositeId.class)
+@IdClass(CompositeId.class)             // IdClass needed since it has composite primary keys
 public class WarehouseInventory{
     
+    // Mony to One with warehouses
     @Id
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="ware_id")
     private Warehouse warehouse;
 
+    // Many to One with games
     @Id
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="game_id")

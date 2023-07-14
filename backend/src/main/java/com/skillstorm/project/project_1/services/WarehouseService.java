@@ -50,7 +50,7 @@ public class WarehouseService {
 
     public Warehouse saveWarehouse(Warehouse warehouse) {
         City city = cityService.saveCity(warehouse.getCity());
-        warehouse.setCity(city);
+        warehouse.setCity(city);                                    // sets the city since it has its own table
         if (warehouse.getCurrInv() > warehouse.getMaxInv()) {
             return null;
         }
@@ -62,9 +62,9 @@ public class WarehouseService {
     }
 
     public void deleteWarehouse(Warehouse warehouse) {
-
-        warehouseRepository.delete(warehouse);
-        warehouseRepository.resetWarehouseSerial();
+        int wareId = warehouse.getId();
+        warehouseRepository.deleteWarehouse(wareId);
+        warehouseRepository.resetWarehouseSerial();     // Calls the repository query to reset the serial/warehouse id
     }
     
 }

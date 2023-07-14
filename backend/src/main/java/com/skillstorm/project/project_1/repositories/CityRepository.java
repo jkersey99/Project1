@@ -9,5 +9,7 @@ import com.skillstorm.project.project_1.models.City;
 public interface CityRepository extends JpaRepository<City, Integer>{
 
     public City findByCity(String city);
+
+    //  not used
     
 }

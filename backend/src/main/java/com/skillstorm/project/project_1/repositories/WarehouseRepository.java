@@ -16,6 +16,7 @@ import com.skillstorm.project.project_1.models.Warehouse;
 @Repository
 public interface WarehouseRepository extends JpaRepository<Warehouse, Integer>{
 
+    // used for updating a warehouse's max inventory. Currently unused and rolled into general PUT, but left because it might be useful down the road
     @Query("update Warehouse w set w.maxInv = :max_inv where id = :ware_id")
     @Modifying
     @Transactional
@@ -24,11 +25,18 @@ public interface WarehouseRepository extends JpaRepository<Warehouse, Integer>{
 
     public List<Warehouse> findAllByCity(City city); 
 
+    // native query to reset the serial sequence, that way deleting a warehouse will allow the id to be reused and not increment forever. 
+    // also helps with not having id gaps during front end fetches
     @Query(value="select setval(pg_get_serial_sequence('warehouses', 'ware_id'), coalesce (max(ware_id)+1, 1), false) from warehouses", nativeQuery = true)
     public long resetWarehouseSerial();
 
+    // find all warehouses ordered y their id
     @Query(value="select * from warehouses order by ware_id", nativeQuery = true)
     public List<Warehouse> findAllOrderByIdAsc(); 
 
-
+    // native delete query. normal delete was not functioning, however this native one works
+    @Query(value="delete from warehouses where ware_id = ?1", nativeQuery = true)
+    @Modifying
+    @Transactional
+    public void deleteWarehouse(@Param("ware_id") int wareId);
 }   

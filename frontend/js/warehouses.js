@@ -1,16 +1,18 @@
 const URL = 'http://localhost:8080/warehouses'
 const URLInv = 'http://localhost:8080/inventory'
 const URLGame = 'http://localhost:8080/games'
-let allWarehouses=[];
-let allGames=[];
+let allWarehouses=[];                               // adds all warehouses
+let allGames=[];                                    // adds all games per warehouse
 
 
+// waits for the DOM to be loaded. New Warehouse listener won't work unless placed inside
 document.addEventListener('DOMContentLoaded', () => {
     let xhr = new XMLHttpRequest();
 
 
     xhr.onreadystatechange = () => {
 
+        // gets warehouse information from the database
         if(xhr.readyState === 4) {
             let warehouses = JSON.parse(xhr.responseText);
 
@@ -28,6 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     xhr2.onreadystatechange = () => {
 
+        // gets game information from the database
         if(xhr2.readyState === 4) {
             let games = JSON.parse(xhr2.responseText);
             games.forEach(newGame => {
@@ -41,18 +44,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
     xhr2.send();
 
-
+// adds a new warehouse to the database
 document.getElementById('new-warehouse-form').addEventListener('submit', (event) => {
 
     event.preventDefault();
 
     let inputData = new FormData(document.getElementById('new-warehouse-form'));
 
+    // assembles the warehouse object
     let newWarehouse = {
 
         name : inputData.get('new-warehouse-name'),
         manager : inputData.get('new-warehouse-manager'),
-        maxInv : inputData.get('new-warehouse-maxinv'),
+        maxInv : parseInt(inputData.get('new-warehouse-maxinv')),
         city  : {
             city: inputData.get('new-warehouse-city'),
             state : inputData.get('new-warehouse-state'),
@@ -60,6 +64,7 @@ document.getElementById('new-warehouse-form').addEventListener('submit', (event)
         }
     }
 
+    // send the POST request to the database
     fetch(URL, {
         method : 'POST',
         headers : {
@@ -73,17 +78,21 @@ document.getElementById('new-warehouse-form').addEventListener('submit', (event)
     })
 
     .then((warehouseJson) => {
+        // takes the returned warehouse and adds it to the table
         addWarehouseToTable(warehouseJson);
-
+        // sets all inventory totals to 0 for the new warehouse. Needed to keep accurate database calls.
+        for(let i=0; i < allGames.length; i++) {
+            doPostRequest(parseInt(allGames[i].id), parseInt(warehouseJson.id), 0);
+        }
         document.getElementById('new-warehouse-form').reset();
     })
-
     .catch((error) => {
         console.error(error);
     })
     resetAllForms();
 });
 
+// enables the form to add a new warehouse when clicked
 document.getElementById('new-warehouse-button').addEventListener("click", (event) => {
 
     event.preventDefault();
@@ -100,6 +109,7 @@ document.getElementById('new-warehouse-button').addEventListener("click", (event
     document.getElementById('new-warehouse-cancel').style.display = 'block';
 });
 
+// cancels adding a new warehouse
 document.getElementById('new-warehouse-cancel').addEventListener("click", (event) => {
     event.preventDefault();
 
@@ -111,22 +121,26 @@ document.getElementById('new-warehouse-cancel').addEventListener("click", (event
     document.getElementById('new-warehouse-cancel').style.display = 'none';
 });
 
-
+// adds a new warehouse to the table
 function addWarehouseToTable(newWarehouse) {
     let tr = document.createElement('tr');
     let id = document.createElement('td');
     let name = document.createElement('td');
     let manager = document.createElement('td');
+    let currInv = document.createElement('td');
     let maxInv = document.createElement('td');  
     let city = document.createElement('td');  
     let editBtn = document.createElement('td');  
     let deleteBtn = document.createElement('td');
 
     id.innerText = newWarehouse.id;
-    id.style.display = "none";
+    id.style.display = "none";                      // hides the id
     name.innerText = newWarehouse.name;
     manager.innerText= newWarehouse.manager;
+    currInv.innerText = newWarehouse.currInv;
+    currInv.style.textAlign="center";               // keeps numbers centered
     maxInv.innerText = newWarehouse.maxInv;
+    maxInv.style.textAlign="center";                // keeps numbers centered
     city.innerText = newWarehouse.city.city + ', ' + newWarehouse.city.state + ', ' + newWarehouse.city.zip;
 
     editBtn.innerHTML = 
@@ -138,6 +152,7 @@ function addWarehouseToTable(newWarehouse) {
     tr.appendChild(id);
     tr.appendChild(name);
     tr.appendChild(manager);
+    tr.appendChild(currInv);
     tr.appendChild(maxInv);
     tr.appendChild(city);
     tr.appendChild(editBtn);
@@ -147,22 +162,23 @@ function addWarehouseToTable(newWarehouse) {
 
     document.getElementById('warehouse-table-body').appendChild(tr);
 
+    // addes the warehouse to the list of warehouses
     allWarehouses.push(newWarehouse);
 };
 
-
-
-
+// cancels the warehouse update form
 document.getElementById('update-cancel-button').addEventListener('click', (event) => {
     event.preventDefault();
     resetAllForms();
 });
 
+// cancels the warehouse delete form
 document.getElementById('delete-cancel-button').addEventListener('click', (event) => {
     event.preventDefault();
     resetAllForms();
 });
 
+// resets the page back to how it initially loaded
 function resetAllForms() {
 
     document.getElementById('new-warehouse-form').reset();
@@ -176,14 +192,14 @@ function resetAllForms() {
     document.getElementById('warehouse-table').style.display= 'block';
 }
 
-
-
+// updates warehouses to the database
 document.getElementById('update-warehouse-form').addEventListener('submit', (event) => {
 
     event.preventDefault();
 
     let inputData = new FormData(document.getElementById('update-warehouse-form'));
 
+    // creates the warehouse object
     let warehouse = {
         id : document.getElementById('update-warehouse-id').value,
         name : inputData.get('update-warehouse-name'),
@@ -194,26 +210,7 @@ document.getElementById('update-warehouse-form').addEventListener('submit', (eve
             state : inputData.get('update-warehouse-state'),
             zip : inputData.get('update-warehouse-zip')
         }
-    }
-
-    let wareQuant = 0;
-        let overInv = false;
-        for(let i = 1; i < allGames.length +1; i++) {
-            wareQuant += parseInt(document.getElementById(`update-game${i}`).value);
-            if (wareQuant > warehouse.maxInv) {
-                overInv = true;
-            }
-    warehouse.currInv = wareQuant;
-            
-        }
-        if (overInv) {
-            window.alert("You are over this warehouse's maximum capacity by " + (wareQuant - warehouse.maxInv) + ". Please adjust your numbers and try again.")
-        }
-        else {
-            for(let i = 1; i < allGames.length +1; i++) {
-                
-                doPutRequest(i, warehouse.id, parseInt(document.getElementById(`update-game${i}`).value));
-
+    }           // sends a PUT request to the back end
                 fetch(URL + '/warehouse', {
                     method : 'PUT',
                     headers : {
@@ -225,10 +222,9 @@ document.getElementById('update-warehouse-form').addEventListener('submit', (eve
                 .then((data) => {
                     return data.json();
                 })
-            
+                // updates the warehouse in the table and then resets the form
                 .then((warehouseJson) => {
                     updateWarehouseInTable(warehouseJson);
-            
                     document.getElementById('update-warehouse-form').reset();
                     document.getElementById('new-warehouse-form').style.display = 'block';
                     document.getElementById('update-warehouse-form').style.display = 'none';
@@ -238,17 +234,16 @@ document.getElementById('update-warehouse-form').addEventListener('submit', (eve
                 .catch((error) => {
                     console.error(error);
                 })
-                
-            }
-        }   
+                resetAllForms();
 });
 
+// updates the table when warehouses are updated
 function updateWarehouseInTable (warehouse) {
     document.getElementById('TR' + warehouse.id).innerHTML =`
-    <td>${warehouse.id}</td>
     <td>${warehouse.name}</td>
     <td>${warehouse.manager}</td>
-    <td>${warehouse.maxInv}</td>
+    <td style="text-align: center;">${warehouse.currInv}</td>
+    <td style="text-align: center;">${warehouse.maxInv}</td>
     <td>${warehouse.city.city + ", " + warehouse.city.state + ", " + warehouse.city.zip}</td>
     <td><button class="btn btn-primary" id="update-button" onclick="activateEditForm(${warehouse.id})">Edit</button></td>
     <td><button class="btn btn-primary" id="delete-button" onclick="activateDeleteForm(${warehouse.id})">Delete</button></td>
@@ -256,21 +251,25 @@ function updateWarehouseInTable (warehouse) {
 
 };
 
+// deletes a warehouse from the database
 document.getElementById('delete-warehouse-form').addEventListener('submit', (event) => {
     event.preventDefault();
 
     let idOnForm = document.getElementById('delete-warehouse-id').value;
     let nameOnForm = document.getElementById('delete-warehouse-name').value;
     let managerOnForm = document.getElementById('delete-warehouse-manager').value;
+    let currInvOnForm = document.getElementById('delete-warehouse-currinv').value;
     let maxInvOnForm = document.getElementById('delete-warehouse-maxinv').value;
     let cityOnForm = document.getElementById('delete-warehouse-city').value;
     let stateOnForm = document.getElementById('delete-warehouse-state').value;
     let zipOnForm = document.getElementById('delete-warehouse-zip').value;
 
+    // creates the warehouse object
     let warehouse = {
         id : idOnForm,
         name : nameOnForm,
         manager : managerOnForm,
+        currInv : currInvOnForm,
         maxInv : maxInvOnForm,
         city : {
             city : cityOnForm,
@@ -278,8 +277,10 @@ document.getElementById('delete-warehouse-form').addEventListener('submit', (eve
             zip : zipOnForm
         }
     };
+    console.log(warehouse);
 
-    fetch(URL, {
+    // sends the delete request to the back end
+    fetch(URL+'/delete', {
         method: 'DELETE',
         headers: {
             "Content-Type" : "application/json"
@@ -287,10 +288,9 @@ document.getElementById('delete-warehouse-form').addEventListener('submit', (eve
         body : JSON.stringify(warehouse)
     })
     .then((data) => {
-
         if(data.status === 204) {
+            // removes the warehouse from the table and resets the forms
             removeWarehouseFromTable(warehouse);
-
             resetAllForms();
         }
     })
@@ -299,22 +299,33 @@ document.getElementById('delete-warehouse-form').addEventListener('submit', (eve
     })
 });
 
+// removes a deleted warehouse from the table
 function removeWarehouseFromTable(warehouse) {
 
     const element = document.getElementById('TR' + warehouse.id);
     element.remove();
 };
+});
 
+// sends a PUT request to the junction table to update inventory
 async function doPutRequest(gameId, wareId, quantity) {
 
     let returnedData = await fetch(URLInv + `?wareId=${wareId}&gameId=${gameId}&quantity=${quantity}`, {
         method : 'PUT',
     });
     let game = await returnedData.json();
-    console.log(game);
 }
-});
 
+// sends a POST request to the junction table to add new inventory
+async function doPostRequest(gameId, wareId, quantity) {
+
+    let returnedData = await fetch(URLInv + `?wareId=${wareId}&gameId=${gameId}&quantity=${quantity}`, {
+        method : 'POST',
+    });
+    let game = await returnedData.json();
+}
+
+// enables the Update form when clicked
 function activateEditForm(warehouseId) {
 
     for(let w of allWarehouses) {
@@ -322,6 +333,7 @@ function activateEditForm(warehouseId) {
             document.getElementById('update-warehouse-id').value = w.id;
             document.getElementById('update-warehouse-name').value = w.name;
             document.getElementById('update-warehouse-manager').value = w.manager;
+            document.getElementById('update-warehouse-currinv').value = w.currInv;
             document.getElementById('update-warehouse-maxinv').value = w.maxInv;
             document.getElementById('update-warehouse-city').value = w.city.city;
             document.getElementById('update-warehouse-state').value = w.city.state;
@@ -329,6 +341,7 @@ function activateEditForm(warehouseId) {
         }
     }
 
+    // gets current inventory for the selected warehouse
     fetch(URLInv +`/warehouseinv?wareId=${warehouseId}`, {
         method : 'GET',
         headers : {
@@ -340,30 +353,25 @@ function activateEditForm(warehouseId) {
         return data.json();
     })
     
+    // sorts the games by name instead of id number
     .then((invJson) => {
         let sortedJson = invJson.sort((g1, g2) => (g1.game.title > g2.game.title) ? 1 : (g1.game.title < g2.game.title) ? -1 : 0);
+        // adds the games to the warehouse's individual table
         for (let i = 0; i < invJson.length; i++) {
-            console.log(invJson);
-            
             addGameToTable(sortedJson[i].game, sortedJson[i].quantity);
         }
         document.getElementById('warehouse-table').style.display='none';
         document.getElementById('game-table').style.visibility = 'visible';
         document.getElementById('new-warehouse-form').style.display = 'none';
         document.getElementById('update-warehouse-form').style.display = 'block';
-        document.getElementById('delete-warehouse-form').style.display = 'none';
-        
-
-        
+        document.getElementById('delete-warehouse-form').style.display = 'none';  
     })
-
     .catch((error) => {
         console.error(error);
-})
-    
-    
-}
+})   
+}           // end of DOM Content Loader
 
+// enables the warehouse delete form
 function activateDeleteForm(warehouseId) {
 
     for(let w of allWarehouses) {
@@ -371,13 +379,14 @@ function activateDeleteForm(warehouseId) {
             document.getElementById('delete-warehouse-id').value = w.id;
             document.getElementById('delete-warehouse-name').value = w.name;
             document.getElementById('delete-warehouse-manager').value = w.manager;
+            document.getElementById('delete-warehouse-currinv').value = w.currInv;
             document.getElementById('delete-warehouse-maxinv').value = w.maxInv;
             document.getElementById('delete-warehouse-city').value = w.city.city;
             document.getElementById('delete-warehouse-state').value = w.city.state;
             document.getElementById('delete-warehouse-zip').value = w.city.zip;
         }
     }
-
+    // gets currently inventory for the selected warehouse
     fetch(URLInv +`/warehouseinv?wareId=${warehouseId}`, {
         method : 'GET',
         headers : {
@@ -388,12 +397,11 @@ function activateDeleteForm(warehouseId) {
     .then((data) => {
         return data.json();
     })
-    
+    // sorts the games by name instead of id number
     .then((invJson) => {
         let sortedJson = invJson.sort((g1, g2) => (g1.game.title > g2.game.title) ? 1 : (g1.game.title < g2.game.title) ? -1 : 0);
         for (let i = 0; i < invJson.length; i++) {
-            console.log(invJson);
-            
+            // adds the games to the warehouse's individual table
             addGameToTable(sortedJson[i].game, sortedJson[i].quantity);
         }
         document.getElementById('warehouse-table').style.display='none';
@@ -401,16 +409,13 @@ function activateDeleteForm(warehouseId) {
         document.getElementById('new-warehouse-form').style.display = 'none';
         document.getElementById('update-warehouse-form').style.display = 'none';
         document.getElementById('delete-warehouse-form').style.display = 'block';
-        
-
-        
     })
-
     .catch((error) => {
         console.error(error);
 })
 }
 
+// adds a game to the warehouse's individual table
 function addGameToTable(newGame, quantity) {
     let gameTr = document.createElement('tr');
     let gameId = document.createElement('td');
@@ -418,42 +423,22 @@ function addGameToTable(newGame, quantity) {
     let platform = document.createElement('td');
     let releaseDate = document.createElement('td');  
     let quant = document.createElement('td');  
-    let editBtn = document.createElement('td');  
-    let deleteBtn = document.createElement('td');
-
-    
 
     gameId.innerText = newGame.id;
     gameId.style.display = "none";
     gameTitle.innerText = newGame.title;
     platform.innerText= newGame.platform;
     releaseDate.innerText = newGame.releaseDate;
-    quant.innerHTML = `<input id="${newGame.id}-quant" name="${newGame.id}-quant" type="text" class="form-control" value="${quantity}disabled/>`
     quant.innerText = quantity;
-    deleteBtn.style.display = "none";
-
-    editBtn.innerHTML = 
-    `<button class="btn btn-primary" id="${newGame.id}-quant-button" onclick="quantEditButton(${newGame.id})">Edit</button><button class="btn btn-primary" id="${newGame.id}-cancel-button" onclick="activateCancelButton(${newGame.id})" style="display:none;">Cancel</button>`;
+    quant.style.textAlign="center";
 
     gameTr.appendChild(gameId);
     gameTr.appendChild(gameTitle);
     gameTr.appendChild(platform);
     gameTr.appendChild(releaseDate);
     gameTr.appendChild(quant);
-    gameTr.appendChild(editBtn);
-    gameTr.appendChild(deleteBtn);
 
     gameTr.setAttribute('id', 'TR' + newGame.id);
 
     document.getElementById('game-table-body').appendChild(gameTr);
 };
-
-function quantEditButton (gameId) {
-    document.getElementById(`${gameId}-quant`).setAttribute("disabled", false);
-    document.getElementById(`${gameId}-quant-button`).style.display="none";
-    document.getElementById(`${gameId}-cancel-button`).style.visibility="visible";
-}
-
-function activateCancelButton(gameId) {
-
-}

@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.skillstorm.project.project_1.models.Game;
 import com.skillstorm.project.project_1.services.GameService;
 
+// Game Controller
 @RestController
 @RequestMapping("/games")
 @CrossOrigin
@@ -36,18 +37,21 @@ public class GameController {
         return new ResponseEntity<List<Game>>(games, HttpStatus.OK);
     }
 
+    // Used to find games by their Id
     @GetMapping("/id/{id}")
     public ResponseEntity<Game> findGameById(@PathVariable int id) {
         Game game = gameService.findGameById(id);
         return new ResponseEntity<Game>(game, HttpStatus.OK);
     }
 
+    // Used to find games by their title
     @GetMapping("/title")
     public ResponseEntity<List<Game>> findGamesByTitle(@RequestParam String title) {
         List<Game> games = gameService.findGamesByTitle(title);
         return new ResponseEntity<List<Game>>(games, HttpStatus.OK);
     }
 
+    // Adds new games to the database
     @PostMapping
     public ResponseEntity<Game> createGame(@Valid @RequestBody Game game) {
         
@@ -55,12 +59,14 @@ public class GameController {
         return new ResponseEntity<Game>(createdGame, HttpStatus.CREATED);
     }
 
+    // Updates games in the database
     @PutMapping("/game")
     public ResponseEntity<Game> updateGame(@RequestBody Game game) {
         Game updatedGame = gameService.saveGame(game);
         return new ResponseEntity<Game>(updatedGame, HttpStatus.OK);
     }
     
+    // Deletes games in the database
     @DeleteMapping("/delete")
     public ResponseEntity<Game> deleteGame(@RequestBody Game game) {
         gameService.deleteGame(game);

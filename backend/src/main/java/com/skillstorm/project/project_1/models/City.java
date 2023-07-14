@@ -10,6 +10,7 @@ import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
+// City is its own model due to normalization
 @Entity
 @Table(name="cities")
 public class City {
@@ -24,6 +25,7 @@ public class City {
     @Column
     private String zip;
 
+    // One to Many with warehouses
     @JsonBackReference
     @OneToMany(targetEntity = Warehouse.class, mappedBy = "city")
     private Set<Warehouse> warehouses;

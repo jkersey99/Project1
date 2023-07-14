@@ -21,10 +21,7 @@
                 <div class="list-group list-group-flush">
                     <a class="list-group-item list-group-item-action list-group-item-light p-3" href="./index.html">Warehouses</a>
                     <a class="list-group-item list-group-item-action list-group-item-light p-3" href="#!">Games</a>
-                    <a class="list-group-item list-group-item-action list-group-item-light p-3" href="#!">Overview</a>
-                    <a class="list-group-item list-group-item-action list-group-item-light p-3" href="#!">Events</a>
-                    <a class="list-group-item list-group-item-action list-group-item-light p-3" href="#!">Profile</a>
-                    <a class="list-group-item list-group-item-action list-group-item-light p-3" href="#!">Status</a>
+
                 </div>
             </div>
             <!-- Page content wrapper-->
@@ -41,7 +38,7 @@
                 <div class="container-fluid" id="top-half-games">
                     <br>
                     <form id="new-game-form" action="#" style="display: none;" >
-
+                        
                         <div class="form-group">
                             <label>Game Title</label>
                             <input id="new-game-title" name="new-game-title" type="text" class="form-control"/>
@@ -85,115 +82,119 @@
 
     
                     <form id="update-game-form" action="#" style="display:none;">
-    
-                        <div class="form-group">
+                        <div>
+                        <div  id="first-half" class="col-lg-5">
+                        <div >
                             <label>Game ID</label>
                             <input id="update-game-id" name="update-game-id" type="text" class="form-control" disabled/>
                         </div>
     
-                        <div class="form-group">
+                        <div >
                             <label>Game Title</label>
                             <input id="update-game-title" name="update-game-title" type="text" class="form-control"/>
                         </div>
     
-                        <div class="form-group">
+                        <div >
                             <label>Platform</label>
                             <input id="update-game-platform" name="update-game-platform" type="text" class="form-control"/>
                         </div>
     
-                        <div class="form-group">
+                        <div >
                             <label>Publisher</label>
                             <input id="update-game-publisher" name="update-game-publisher" type="text" class="form-control"/>
                         </div>
     
-                        <div class="form-group">
+                        <div >
                             <label>Release Date</label>
                             <input id="update-game-releaseDate" name="update-game-releaseDate" type="text" class="form-control"/>
                         </div>
     
-                        <div class="form-group">
+                        <div >
                             <label>Genre</label>
                             <input id="update-game-genre" name="update-game-genre" type="text" class="form-control"/>
                         </div>
     
-                        <div class="form-group">
+                        <div >
                             <label>Description</label>
                             <input id="update-game-description" name="update-game-description" type="text" class="form-control"/>
                         </div>
     
-                        <div id="before-buttons" class="form-group">
+                        <div id="before-buttons" >
                             <label>Price</label>
                             <input id="update-game-price" name="update-game-price" type="text" class="form-control"/>
+                            <br/>
                         </div>
     
-                        <div class="form-group">
+                        <div>
                             <input id="update-button" name="update-button" type="submit" value="Update" class="btn btn-primary" />
                             <input id="update-cancel-button" name="update-cancel-button" type="submit" value="Cancel" class="btn btn-secondary" />
                         </div>
                         <br/>
-                        <br/>
-                        <div class="form-group">
-                            <label>Picture</label>
-                            <img style="height: auto; max-width: 30%;" src="" id="update-game-picture" name="update-game-picture" alt="game box" class="form-control"/>
+                        </div>
+                        <div id="second-half">
+                            <img src="" id="update-game-picture" name="update-game-picture" alt="game box" class="form-control"/>
+                        </div>
                         </div>
     
                     </form>
     
                     <form id="delete-game-form" action="#" style="display:none;">
     
-                        <div class="form-group">
+                        <div  id="first-half" class="col-lg-5">
+                        <div style="display: none;">
                             <label>Game ID</label>
                             <input id="delete-game-id" name="delete-game-id" type="text" class="form-control" disabled/>
                         </div>
     
-                        <div class="form-group">
+                        <div >
                             <label>Game Title</label>
                             <input id="delete-game-title" name="delete-game-title" type="text" class="form-control" disabled/>
                         </div>
     
-                        <div class="form-group">
+                        <div >
                             <label>Platform</label>
                             <input id="delete-game-platform" name="delete-game-platform" type="text" class="form-control" disabled/>
                         </div>
     
-                        <div class="form-group">
+                        <div >
                             <label>Publisher</label>
                             <input id="delete-game-publisher" name="delete-game-publisher" type="text" class="form-control" disabled/>
                         </div>
     
-                        <div class="form-group">
+                        <div >
                             <label>Release Date</label>
                             <input id="delete-game-releaseDate" name="delete-game-releaseDate" type="text" class="form-control" disabled/>
                         </div>
     
-                        <div class="form-group">
+                        <div >
                             <label>Genre</label>
                             <input id="delete-game-genre" name="delete-game-genre" type="text" class="form-control" disabled/>
                         </div>
     
-                        <div class="form-group">
+                        <div >
                             <label>Description</label>
                             <input id="delete-game-description" name="delete-game-description" type="text" class="form-control" disabled/>
                         </div>
     
-                        <div class="form-group">
+                        <div >
                             <label>Price</label>
                             <input id="delete-game-price" name="delete-game-price" type="text" class="form-control" disabled/>
                         </div>
     
-                        <div class="form-group">
+                        <div >
                             <input id="delete-button" name="delete-button" type="submit" value="Delete" class="btn btn-primary" />
                             <input id="delete-cancel-button" name="delete-cancel-button" type="submit" value="Cancel" class="btn btn-secondary" />
                         </div>
                         <br/>
-                        <br/>
-                        <div class="form-group">
-                            <label>Picture</label>
+                        </div>
+                        <div id="second-half">
                             <img src="" id="delete-game-picture" name="delete-game-picture" alt="game box" class="form-control"/>
                         </div>
                     </form>
                 </div>
                <div id="table" class="table" >
+                <br/>
+                <br/>
 
                     <table class="table table-striped table-hover">
 
@@ -203,7 +204,7 @@
                             <th>Game</th>
                             <th>Platform</th>
                             <th>Publisher</th>
-                            <th>Release Date</th>
+                            <th>Rel. Date</th>
                             <th>Genre</th>
                             <th>Description</th>
                             <th>Price</th>

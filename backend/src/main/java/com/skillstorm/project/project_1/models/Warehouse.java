@@ -16,6 +16,7 @@ import javax.validation.constraints.Min;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
+// Maps to the warehouse table
 @Entity
 @Table(name="warehouses")
 public class Warehouse {
@@ -39,12 +40,14 @@ public class Warehouse {
     @Min(1)
     private int maxInv;
 
+    // Many to One with the city table
     @ManyToOne
     @JoinColumn(name="city")
     private City city;
 
-    @JsonBackReference
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "warehouse")
+    // One to Many with the junction ta ble
+    @JsonBackReference                                                  // prevents infinite recursion
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "warehouse")         // EAGER-type helped with populating the front end
     private List<WarehouseInventory> inventory;
 
     public Warehouse() {

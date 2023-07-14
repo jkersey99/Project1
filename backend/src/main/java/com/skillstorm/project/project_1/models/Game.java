@@ -13,6 +13,7 @@ import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
+// Maps to the games table
 @Entity
 @Table(name = "games")
 public class Game {
@@ -46,8 +47,9 @@ public class Game {
     @Column
     private String image;
 
-    @JsonBackReference
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "game")
+    // One to Many with the junction table, joining on id
+    @JsonBackReference                                          // prevents infinite recursion
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "game")      // EAGER-type helped with populating the front end
     private List<WarehouseInventory> inventory;
 
     public Game() {

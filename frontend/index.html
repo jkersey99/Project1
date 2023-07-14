@@ -20,16 +20,12 @@
                 <div class="list-group list-group-flush">
                     <a class="list-group-item list-group-item-action list-group-item-light p-3" href="#!">Warehouses</a>
                     <a class="list-group-item list-group-item-action list-group-item-light p-3" href="./games.html">Games</a>
-                    <a class="list-group-item list-group-item-action list-group-item-light p-3" href="#!">Overview</a>
-                    <a class="list-group-item list-group-item-action list-group-item-light p-3" href="#!">Events</a>
-                    <a class="list-group-item list-group-item-action list-group-item-light p-3" href="#!">Profile</a>
-                    <a class="list-group-item list-group-item-action list-group-item-light p-3" href="#!">Status</a>
                 </div>
             </div>
             <!-- Page content wrapper-->
             <div id="page-content-wrapper">
                 <!-- Top navigation-->
-                <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
+                <nav id="top" class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
                     <div class="container-fluid">
                         <button class="btn btn-primary" id="new-warehouse-button">New Warehouse</button>
                         <button class="btn btn-primary" id="new-warehouse-cancel" style="display: none;">Cancel</button>
@@ -37,7 +33,7 @@
                     </div>
                 </nav>
                 <!-- Page content-->
-                <div class="container-fluid" id="top-half">
+                <div class="container-fluid" id="top-half-games">
                     <br>
                     <form id="new-warehouse-form" action="#" style="display: none;" >
 
@@ -94,6 +90,11 @@
                             <label>Manager</label>
                             <input id="update-warehouse-manager" name="update-warehouse-manager" type="text" class="form-control"/>
                         </div>
+
+                        <div class="form-group">
+                            <label>Current Inventory</label>
+                            <input id="update-warehouse-currinv" name="update-warehouse-currinv" type="text" class="form-control"/>
+                        </div>
     
                         <div class="form-group">
                             <label>Maximum Inventory</label>
@@ -139,6 +140,11 @@
                             <label>Warehouse Manager</label>
                             <input id="delete-warehouse-manager" name="delete-warehouse-manager" type="text" class="form-control" disabled/>
                         </div>
+
+                        <div class="form-group">
+                            <label>Warehouse Current Inventory</label>
+                            <input id="delete-warehouse-currinv" name="delete-warehouse-currinv" type="text" class="form-control" disabled/>
+                        </div>
     
                         <div class="form-group">
                             <label>Warehouse Maximum Inventory</label>
@@ -176,10 +182,11 @@
                                 <th style="display:none">ID</th>
                                 <th>Warehouse Name</th>
                                 <th>Manager</th>
+                                <th>Current Inventory</th>
                                 <th>Maximum Inventory</th>
                                 <th>Location</th>
-                                <th>Edit</th>
-                                <th>Delete</th>
+                                <th style="text-align: center;">Edit</th>
+                                <th style="text-align: center;">Delete</th>
                             </tr>
                         </thead>
                         <tbody id="warehouse-table-body">
@@ -192,9 +199,7 @@
                                 <th>Game Title</th>
                                 <th>Platform</th>
                                 <th>Release Date</th>
-                                <th>Quantity</th>
-                                <th>Edit</th>
-                                <th></th>
+                                <th style="text-align: center;">Quantity</th>
                             </tr>
                         </thead>
                         <tbody id="game-table-body">

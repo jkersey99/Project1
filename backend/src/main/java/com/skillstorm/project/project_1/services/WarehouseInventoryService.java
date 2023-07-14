@@ -14,6 +14,7 @@ public class WarehouseInventoryService {
     @Autowired
     WarehouseInventoryRepository warehouseInvetoryRepository;
 
+    // Checks to make sure the warehouse exists before returning it
     public List<WarehouseInventory> findAllByWareId(int wareId) {
         List<WarehouseInventory> inventory = warehouseInvetoryRepository.findAllByWareId(wareId);
 
@@ -22,7 +23,7 @@ public class WarehouseInventoryService {
         }
         return null;
     }
-        
+    // Checks to make sure the warehouse exists before returning it
         public List<WarehouseInventory> findAllByGameId(int gameId) {
         List<WarehouseInventory> inventory = warehouseInvetoryRepository.findAllByGameId(gameId);
 

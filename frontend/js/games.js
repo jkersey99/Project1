@@ -1,11 +1,12 @@
 const URL = 'http://localhost:8080/games'
 const URLInv = 'http://localhost:8080/inventory'
 const URLWare = 'http://localhost:8080/warehouses'
-let allGames=[];
-let allWarehouses=[];
-let allInv=[];
+let allGames=[];                                        // initializes an array to hold every game
+let allWarehouses=[];                                   // initializes an array to hold every warehouse
+let allInv=[];                                          // initializes an array to hold every inventory item for a game
 
 
+// most functions wait for the DOM to load. Adding a game will error out if not placed inside
 document.addEventListener('DOMContentLoaded', () => {
     let xhr = new XMLHttpRequest();
     
@@ -17,7 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
             let games = JSON.parse(xhr.responseText);
 
             games.forEach(newGame => {
-                addGameToTable(newGame);
+                addGameToTable(newGame);                // adds all games to the inital table
             });
         }
     };
@@ -30,6 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     xhr2.onreadystatechange = () => {
 
+        // starts another get request for warehouses, so each game knows how many warehouse elements it needs and adds them to the new, update, and delete forms
         if(xhr2.readyState === 4) {
             let warehouses = JSON.parse(xhr2.responseText);
             let count = 1;
@@ -39,7 +41,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 let newInput = document.createElement("input");
                 let newLabel = document.createElement("label");
                 let newNode = document.createTextNode(`Warehouse ${count}`);
-                newDiv.class = "form-group";               
+                newDiv.class = "form-group";   
+                newDiv.style.float="left";         
                 newInput.type="number";
                 newInput.className = "form-control";
                 newInput.id=`new-warehouse${count}`;
@@ -53,8 +56,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 let updateInput = document.createElement("input");
                 let updateLabel = document.createElement("label");
                 let updateNode = document.createTextNode(`Warehouse ${count}`);
-                updateDiv.class = "form-group";               
+                updateDiv.class = "form-group";
+                updateDiv.style.display="inline-block";            
                 updateInput.type="number";
+                updateInput.style.marginRight="10px";
                 updateInput.className = "form-control";
                 updateInput.id=`update-warehouse${count}`;
                 updateInput.name= `update-warehouse${count}`;
@@ -66,7 +71,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 let deleteInput = document.createElement("input");
                 let deleteLabel = document.createElement("label");
                 let deleteNode = document.createTextNode(`Warehouse ${count}`);
-                deleteDiv.class = "form-group";               
+                deleteDiv.class = "form-group";
+                deleteDiv.style.display="inline-block";                
                 deleteInput.type="number";
                 deleteInput.className = "form-control";
                 deleteInput.id=`delete-warehouse${count}`;
@@ -89,6 +95,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     xhr2.send();
 
+    // button at the top of the screen that opens and closes the new game form
     document.getElementById('new-game-button').addEventListener("click", (event) => {
 
         event.preventDefault();
@@ -104,13 +111,27 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('new-game-button').style.display = 'none';
         document.getElementById('new-game-cancel').style.display = 'block';
     });
+
+    // cancels the new game form
+    document.getElementById('new-game-cancel').addEventListener("click", (event) => {
+        event.preventDefault();
     
+        document.getElementById('new-game-form').style.display = 'none';
+        document.getElementById('update-game-form').style.display = 'none';
+        document.getElementById('delete-game-form').style.display = 'none';
+    
+        document.getElementById('new-game-button').style.display = 'block';
+        document.getElementById('new-game-cancel').style.display = 'none';
+    });
+    
+    // adds a new game to the database
     document.getElementById('new-game-form').addEventListener('submit', (event) => {
 
         event.preventDefault();
     
         let inputData = new FormData(document.getElementById('new-game-form'));
-    
+
+        // assembles the game
         let newGame = {
     
             title : inputData.get('new-game-title'),
@@ -127,15 +148,15 @@ document.addEventListener('DOMContentLoaded', () => {
             headers : {
                 "Content-Type" : "application/json",
             },
-            body : JSON.stringify(newGame)
+            body : JSON.stringify(newGame)          // sends the game in JSON to the back end
         })
     
         .then((data) => {
-            return data.json();
+            return data.json();                 // turns the JSON back into JS
         })
     
         .then((gameJson) => {
-            addGameToTable(gameJson);
+            addGameToTable(gameJson);           // adds the new game to the table
     
             document.getElementById('new-game-form').reset();
         })
@@ -146,6 +167,7 @@ document.addEventListener('DOMContentLoaded', () => {
         resetAllForms();
     });
     
+    // adds new games to the table
     function addGameToTable(newGame) {
         let tr = document.createElement('tr');
         let id = document.createElement('td');
@@ -160,6 +182,7 @@ document.addEventListener('DOMContentLoaded', () => {
         let deleteBtn = document.createElement('td');
     
         id.innerText = newGame.id;
+        id.style.display = "none";                          // game ids are not surfaced to the user
         title.innerText = newGame.title;
         platform.innerText= newGame.platform;
         publisher.innerText = newGame.publisher;
@@ -169,10 +192,10 @@ document.addEventListener('DOMContentLoaded', () => {
         price.innerText = newGame.price;
     
         editBtn.innerHTML = 
-        `<button class="btn btn-primary" id="update-button" onclick="activateEditForm(${newGame.id})">Edit</button>`;
+        `<button class="btn btn-primary" id="update-button" href="#top" onclick="activateEditForm(${newGame.id})">Edit</button>`;
     
         deleteBtn.innerHTML = 
-        `<button class="btn btn-primary" id="delete-button" onclick="activateDeleteForm(${newGame.id})">Delete</button>`;
+        `<button class="btn btn-primary" id="delete-button" href="#top" onclick="activateDeleteForm(${newGame.id})">Delete</button>`;
     
         tr.appendChild(id);
         tr.appendChild(title);
@@ -192,29 +215,31 @@ document.addEventListener('DOMContentLoaded', () => {
         allGames.push(newGame);
     };
     
-    
+    // cancels the update form
     document.getElementById('update-cancel-button').addEventListener('click', (event) => {
         event.preventDefault();
         resetAllForms();
     });
     
+    // cancels the delete form
     document.getElementById('delete-cancel-button').addEventListener('click', (event) => {
         event.preventDefault();
         resetAllForms();
     });
     
+    // returns the page back to its original state
     function resetAllForms() {
     
         document.getElementById('new-game-form').reset();
         document.getElementById('update-game-form').reset();
         document.getElementById('delete-game-form').reset();
     
-        document.getElementById('new-game-form').style.display = 'block';
+        document.getElementById('new-game-form').style.display = 'none';
         document.getElementById('update-game-form').style.display = 'none';
         document.getElementById('delete-game-form').style.display = 'none';
     }
     
-    
+    // handles PUT requests for inventory updates
     async function doInvRequest(gameId, wareId, quantity) {
     
         let returnedData = await fetch(URLInv + `?wareId=${wareId}&gameId=${gameId}&quantity=${quantity}`, {
@@ -223,6 +248,7 @@ document.addEventListener('DOMContentLoaded', () => {
         let game = await returnedData.json();
     }
     
+    // handles POST requests for new additions to the inventory (like a new game)
     async function doInvPostRequest(gameId, wareId, quantity) {
     
         let returnedData = await fetch(URLInv + `?wareId=${wareId}&gameId=${gameId}&quantity=${quantity}`, {
@@ -231,6 +257,7 @@ document.addEventListener('DOMContentLoaded', () => {
         let game = await returnedData.json();
     }
     
+    // updates warehouse information in the database so that current inventory stays accurate
     async function doWareRequest(warehouse) {
     
         let returnedData = await fetch(URLWare + `/warehouse`, {
@@ -243,15 +270,9 @@ document.addEventListener('DOMContentLoaded', () => {
         let warehouseData = await returnedData.json();
     }
     
-    
-    
-    
-    
-    
-    
+    // updates the table after a game is updated
     function updateGameInTable (game) {
         document.getElementById('TR' + game.id).innerHTML =`
-        <td>${game.id}</td>
         <td>${game.title}</td>
         <td>${game.platform}</td>
         <td>${game.publisher}</td>
@@ -271,6 +292,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     };
     
+    // deletes games from the database when delete is clicked on the delete form
     document.getElementById('delete-game-form').addEventListener('submit', (event) => {
         event.preventDefault();
     
@@ -314,6 +336,7 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error(error);
         })
     
+        // updates warehouse inventories to account for any quantity the deleted games might have had
         for (let i = 0; i < allWarehouses.length; i++){
             console.log(allWarehouses[i].currInv);
             console.log(parseInt(document.getElementById(`delete-warehouse${i+1}`).value))
@@ -321,6 +344,7 @@ document.addEventListener('DOMContentLoaded', () => {
             console.log(allWarehouses[i].currInv);
             doWareRequest(allWarehouses[i])
         }
+        // removes the game from the table
         removeGameFromTable(game);
     
         resetAllForms();
@@ -329,30 +353,35 @@ document.addEventListener('DOMContentLoaded', () => {
     
     });
     
+    // removes the game from the table
     function removeGameFromTable(game) {
     
         const element = document.getElementById('TR' + game.id);
         element.remove();
     };
     
+    // listener set to the save button to add a new game
     $(document).ready(function(){
         $("#save-button").click(function(event) {
             event.preventDefault();
         
             var gameTitle = document.getElementById('new-game-title').value
-            var api = '?format=jsonp&api_key=da0a26a3994cb8bd2bc52f6fe82255ae874430bd';
+            var api = '?format=jsonp&api_key=da0a26a3994cb8bd2bc52f6fe82255ae874430bd';     // API key
             var gameURL
     
+            // handles the initial Giant Bomb API call to get the game-id from a title search
             $.ajax ({
                 type: 'GET',
-                dataType: 'jsonp',
+                dataType: 'jsonp',                                  // JSONP has to be used since JSON can't be fetched cross-domain due to CORS
                 crossDomain: true,
-                jsonp: 'json_callback',
+                jsonp: 'json_callback',                             // callback needed due to JSONP
                 url: `http://www.giantbomb.com/api/search/` + api + `&query=${gameTitle}&resources=game`,
                 complete: function() {
                 },
                 success: function(giantData) {
                     gameURL = giantData.results[0].api_detail_url + api;
+
+                    // calls the Giant Bomb API again to get the actual game information
                     $.ajax ({
                         type: 'GET',
                         dataType: 'jsonp',
@@ -363,11 +392,9 @@ document.addEventListener('DOMContentLoaded', () => {
                         },
                         success: function(giantData2) {
             
-            
-            
-                            
                             let inputData = new FormData(document.getElementById('new-game-form'));
             
+                            // sets title and price soley by the user, and image solely by Giant Bomb
                             let game = {
                                 title : gameTitle,
                                 price : inputData.get('new-game-price'),
@@ -375,6 +402,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                 
                             }
     
+                            // checks each input field and gives priority to user input
                             if (document.getElementById('new-game-platform').value !== "") {
                                 game.platform = document.getElementById('new-game-platform').value
                             }
@@ -406,6 +434,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                 game.description = giantData2.results.deck
                             };
              
+                                // sends game information to the database
                                 fetch(URL + '/game', {
                                     method : 'PUT',
                                     headers : {
@@ -420,7 +449,9 @@ document.addEventListener('DOMContentLoaded', () => {
                                 })
                             
                                 .then((gameJson) => {
-                                    addGameToTable(gameJson);
+                                    addGameToTable(gameJson);                 // adds the game to the table
+
+                                    // checks the inventory totals against each warehouses maximum inventory, alerts if over capacity
                                     let overInv = false;
                                     let total = 0;
                                     for(let i = 0; i < allWarehouses.length; i++) {
@@ -433,6 +464,8 @@ document.addEventListener('DOMContentLoaded', () => {
                                             }
     
                                     }
+
+                                    // updates warehouse inventory once maximum check has been passed
                                     total=0
                                     if (!overInv) {
                                         for(let i = 0; i < allWarehouses.length; i++) {
@@ -443,45 +476,43 @@ document.addEventListener('DOMContentLoaded', () => {
                                             doWareRequest(allWarehouses[i]);    
                                         }
                                     }
-                            
                                     document.getElementById('new-game-form').reset();
                                 })
-                            
                                 .catch((error) => {
                                     console.error(error);
                                 })
-                            
                         }                   
                     })          
                 }
             })              
             })
-          
-    
     });
     
     
     
     
-    
+    // listener set to the save button to update a game
     $(document).ready(function(){
         $("#update-button").click(function(event) {
             event.preventDefault();
         
             var gameTitle = document.getElementById('update-game-title').value
-            var api = '?format=jsonp&api_key=da0a26a3994cb8bd2bc52f6fe82255ae874430bd';
+            var api = '?format=jsonp&api_key=da0a26a3994cb8bd2bc52f6fe82255ae874430bd';      // API key
             var gameURL
     
+            // handles the initial Giant Bomb API call to get the game-id from a title search
             $.ajax ({
                 type: 'GET',
-                dataType: 'jsonp',
+                dataType: 'jsonp',                                  // JSONP has to be used since JSON can't be fetched cross-domain due to CORS
                 crossDomain: true,
-                jsonp: 'json_callback',
+                jsonp: 'json_callback',                             // callback needed due to JSONP
                 url: `http://www.giantbomb.com/api/search/` + api + `&query=${gameTitle}&resources=game`,
                 complete: function() {
                 },
                 success: function(giantData) {
                     gameURL = giantData.results[0].api_detail_url + api;
+
+                    // calls the Giant Bomb API again to get the actual game information
                     $.ajax ({
                         type: 'GET',
                         dataType: 'jsonp',
@@ -492,11 +523,9 @@ document.addEventListener('DOMContentLoaded', () => {
                         },
                         success: function(giantData2) {
             
-            
-            
-                            
                             let inputData = new FormData(document.getElementById('update-game-form'));
             
+                            // sets title and price soley by the user, and image solely by Giant Bomb
                             let game = {
                                 id : document.getElementById('update-game-id').value,
                                 title : gameTitle,
@@ -505,6 +534,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                 
                             }
     
+                            // checks each input field and gives priority to user input
                             if (document.getElementById('update-game-platform').value !== "") {
                                 game.platform = document.getElementById('update-game-platform').value
                             }
@@ -535,19 +565,20 @@ document.addEventListener('DOMContentLoaded', () => {
                             else {
                                 game.description = giantData2.results.deck
                             };
+
+                            // checks the inventory totals against each warehouses maximum inventory, alerts if over capacity
                             let overInv = false;
                             let total = 0;
-                            for(let i = 0; i < allWarehouses.length; i++) {
+                            for(let i = 0; i < allWarehouses.length; i++) {                       
                                 if (parseInt(document.getElementById(`update-warehouse${i+1}`).value) > allInv[0][i].quantity) {
                                     total = parseInt(document.getElementById(`update-warehouse${i+1}`).value) + allWarehouses[i].currInv - allInv[0][i].quantity; 
                                     if (allWarehouses[i].maxInv < total) {
                                         overInv = true;
                                         window.alert("You are over Warehouse " + (i+1) + "'s maximum capacity by " + (total - allWarehouses[i].maxInv) + ". Please adjust your numbers and try again.")
-                                    }
-                                    
+                                    } 
                                 }
-                                
                             }
+                            // updates warehouse inventory once maximum check has been passed
                             total = 0;
                             if (!overInv) {
                                 for(let i = 0; i < allWarehouses.length; i++) {  
@@ -561,7 +592,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                 }
     
                                 
-    
+                                // sends game information to the database
                                 fetch(URL + '/game', {
                                     method : 'PUT',
                                     headers : {
@@ -576,7 +607,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                 })
                             
                                 .then((gameJson) => {
-                                    updateGameInTable(gameJson);
+                                    updateGameInTable(gameJson);            // updates the game in the table
                             
                                     document.getElementById('update-game-form').reset();
                                     document.getElementById('new-game-form').style.display = 'block';
@@ -600,6 +631,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 });
 
+// enables the delete form
 function activateDeleteForm(gameId) {
     allInv=[];
 
@@ -615,6 +647,7 @@ function activateDeleteForm(gameId) {
             document.getElementById('delete-game-price').value = g.price;
             document.getElementById('delete-game-picture').src = g.image;
 
+            // gets current inventory information from the database
             fetch(URLInv +`/gameinv?gameId=${gameId}`, {
                 method : 'GET',
                 headers : {
@@ -626,28 +659,24 @@ function activateDeleteForm(gameId) {
                 return data.json();
             })
         
+            // update inventory elements
             .then((invJson) => {
                 allInv.push(invJson)
                 for(let i = 0; i < invJson.length; i++) {             
-                    document.getElementById(`delete-warehouse${i+1}`).value = invJson[i].quantity;
-                    
-                    
+                    document.getElementById(`delete-warehouse${i+1}`).value = invJson[i].quantity; 
                 }
-
             })
-        
             .catch((error) => {
                 console.error(error);
         })
         }
     }
-
     document.getElementById('new-game-form').style.display = 'none';
     document.getElementById('update-game-form').style.display = 'none';
     document.getElementById('delete-game-form').style.display = 'block';
 }
 
-
+// actives the update form
 function activateEditForm(gameId) {
     allInv=[];
 
@@ -663,35 +692,27 @@ function activateEditForm(gameId) {
             document.getElementById('update-game-price').value = g.price;
             document.getElementById('update-game-picture').src = g.image;
 
+            // gets current inventory information from the database
             fetch(URLInv +`/gameinv?gameId=${gameId}`, {
                 method : 'GET',
                 headers : {
                     "Content-Type" : "application/json",
                 } 
             })
-        
             .then((data) => {
                 return data.json();
             })
-        
+            // adds updated inventory information to the elements
             .then((invJson) => {
                 allInv.push(invJson)
                 for(let i = 0; i < invJson.length; i++) {
-                    document.getElementById(`update-warehouse${i+1}`).value = 0;
-
-                 
                     document.getElementById(`update-warehouse${i+1}`).value = invJson[i].quantity;
-                    
-                    
                 }
-
             })
-        
             .catch((error) => {
                 console.error(error);
         })
     }}
-
     document.getElementById('new-game-form').style.display = 'none';
     document.getElementById('update-game-form').style.display = 'block';
     document.getElementById('delete-game-form').style.display = 'none';

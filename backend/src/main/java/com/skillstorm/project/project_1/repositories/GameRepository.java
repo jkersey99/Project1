@@ -17,11 +17,15 @@ public interface GameRepository extends JpaRepository<Game, Integer> {
 
     public List<Game> findAllByTitle(String title);
 
+    // native query to reset the serial sequence, that way deleting a game will allow the id to be reused and not increment forever. 
+    // also helps with not having id gaps during front end fetches
     @Query(value="select setval(pg_get_serial_sequence('games', 'game_id'), coalesce (max(game_id)+1, 1), false) from games", nativeQuery = true)
     public long resetGameSerial();
 
+    // find all so that the games are listed by title and not id
     public List<Game>findAllByOrderByTitleAsc();
 
+    // native delete query. normal delete was not functioning, however this native one works
     @Query(value="delete from games where game_id = ?1", nativeQuery = true)
     @Modifying
     @Transactional

@@ -16,17 +16,21 @@ import com.skillstorm.project.project_1.models.WarehouseInventory;
 @Repository
 public interface WarehouseInventoryRepository extends JpaRepository<WarehouseInventory, CompositeId> {
 
+    // Gets warehouse inventy and sorts by game id
     @Query(value = "select * from ware_inv where ware_id = ?1 order by game_id", nativeQuery=true)
     public List<WarehouseInventory>findAllByWareId (@Param("ware_id") Integer wareId);
 
+    // Gets inventory per game and sorts it by warehouse id
     @Query(value = "select * from ware_inv where game_id = ?1 order by ware_id", nativeQuery=true)
     public List<WarehouseInventory>findAllByGameId (@Param("game_id") Integer gameId);
 
+    // updates inventory
     @Query(value = "update ware_inv set quantity = ?3 where ware_id = ?1 and game_id = ?2", nativeQuery=true)
     @Modifying
     @Transactional
     public int updateInventory(@Param("ware_id") int wareId, @Param("game_id") int gameId, @Param("quantity") int quantity);
 
+    // adds new inventory
     @Query(value = "insert into ware_inv values (?1, ?2, ?3)", nativeQuery=true)
     @Modifying
     @Transactional

@@ -19,6 +19,7 @@ public class GameService {
         return gameRepository.findAllByOrderByTitleAsc();
     }
 
+    // Checks to make sure the game exists before returning it
     public Game findGameById(int id) {
         Optional<Game> game = gameRepository.findById(id);
 
@@ -28,6 +29,7 @@ public class GameService {
         return null;
     }
 
+    // Checks to make sure the game exists before returning it
     public List<Game> findGamesByTitle(String title) {
         List<Game> games = gameRepository.findAllByTitle(title);
 
@@ -44,7 +46,7 @@ public class GameService {
     public void deleteGame(Game game) {
         int gameId = game.getId();
         gameRepository.deleteGame(gameId);
-        gameRepository.resetGameSerial();
+        gameRepository.resetGameSerial();           // Calls the repository query to reset the serial/game id
     }
    
 }
