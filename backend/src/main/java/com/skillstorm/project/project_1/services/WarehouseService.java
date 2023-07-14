@@ -25,7 +25,7 @@ public class WarehouseService {
 
     //  calls findAll in the JpaRepository to return all warehouses
     public List<Warehouse> findAllWarehouses() {
-        return warehouseRepository.findAllOrderById();
+        return warehouseRepository.findAllOrderByIdAsc();
     }
 
     // finds a warehouse by its id number
