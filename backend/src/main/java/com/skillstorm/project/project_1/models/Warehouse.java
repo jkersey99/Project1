@@ -12,7 +12,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -32,8 +31,11 @@ public class Warehouse {
     @Column
     private String manager;
 
+    @Column(name="curr_inv")
+    @Min(0)
+    private int currInv;
+
     @Column(name="max_inv")
-    @Max(3000)
     @Min(1)
     private int maxInv;
 
@@ -48,17 +50,19 @@ public class Warehouse {
     public Warehouse() {
     }
 
-    public Warehouse(int id, String name, String manager, @Max(3000) @Min(1) int maxInv, City city) {
+    public Warehouse(int id, String name, String manager, @Min(0) int currInv, @Min(1) int maxInv, City city) {
         this.id = id;
         this.name = name;
         this.manager = manager;
+        this.currInv = currInv;
         this.maxInv = maxInv;
         this.city = city;
     }
 
-    public Warehouse(String name, String manager, @Max(3000) @Min(1) int maxInv, City city) {
+    public Warehouse(String name, String manager, @Min(0) int currInv, @Min(1) int maxInv, City city) {
         this.name = name;
         this.manager = manager;
+        this.currInv = currInv;
         this.maxInv = maxInv;
         this.city = city;
     }
@@ -85,6 +89,14 @@ public class Warehouse {
 
     public void setManager(String manager) {
         this.manager = manager;
+    }
+
+    public int getCurrInv() {
+        return currInv;
+    }
+
+    public void setCurrInv(int currInv) {
+        this.currInv = currInv;
     }
 
     public int getMaxInv() {
@@ -118,6 +130,7 @@ public class Warehouse {
         result = prime * result + id;
         result = prime * result + ((name == null) ? 0 : name.hashCode());
         result = prime * result + ((manager == null) ? 0 : manager.hashCode());
+        result = prime * result + currInv;
         result = prime * result + maxInv;
         result = prime * result + ((city == null) ? 0 : city.hashCode());
         result = prime * result + ((inventory == null) ? 0 : inventory.hashCode());
@@ -145,6 +158,8 @@ public class Warehouse {
                 return false;
         } else if (!manager.equals(other.manager))
             return false;
+        if (currInv != other.currInv)
+            return false;
         if (maxInv != other.maxInv)
             return false;
         if (city == null) {
@@ -162,9 +177,8 @@ public class Warehouse {
 
     @Override
     public String toString() {
-        return "Warehouse [id=" + id + ", name=" + name + ", manager=" + manager + ", maxInv=" + maxInv + ", city="
-                + city + ", inventory=" + inventory + "]";
+        return "Warehouse [id=" + id + ", name=" + name + ", manager=" + manager + ", currInv=" + currInv + ", maxInv="
+                + maxInv + ", city=" + city + ", inventory=" + inventory + "]";
     }
-
     
 }

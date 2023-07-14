@@ -25,7 +25,7 @@ public class WarehouseService {
 
     //  calls findAll in the JpaRepository to return all warehouses
     public List<Warehouse> findAllWarehouses() {
-        return warehouseRepository.findAll();
+        return warehouseRepository.findAllOrderById();
     }
 
     // finds a warehouse by its id number
@@ -51,6 +51,9 @@ public class WarehouseService {
     public Warehouse saveWarehouse(Warehouse warehouse) {
         City city = cityService.saveCity(warehouse.getCity());
         warehouse.setCity(city);
+        if (warehouse.getCurrInv() > warehouse.getMaxInv()) {
+            return null;
+        }
         return warehouseRepository.save(warehouse);
     }
 

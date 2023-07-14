@@ -27,5 +27,7 @@ public interface WarehouseRepository extends JpaRepository<Warehouse, Integer>{
     @Query(value="select setval(pg_get_serial_sequence('warehouses', 'ware_id'), coalesce (max(ware_id)+1, 1), false) from warehouses", nativeQuery = true)
     public long resetWarehouseSerial();
 
+    public List<Warehouse> findAllOrderById(); 
+
 
 }   

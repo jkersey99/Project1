@@ -27,5 +27,10 @@ public interface WarehouseInventoryRepository extends JpaRepository<WarehouseInv
     @Transactional
     public int updateInventory(@Param("ware_id") int wareId, @Param("game_id") int gameId, @Param("quantity") int quantity);
 
+    @Query(value = "insert into ware_inv values (?1, ?2, ?3)", nativeQuery=true)
+    @Modifying
+    @Transactional
+    public int newInventory(@Param("ware_id") int wareId, @Param("game_id") int gameId, @Param("quantity") int quantity);
+
     
 }
